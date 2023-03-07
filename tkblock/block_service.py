@@ -7,10 +7,10 @@
 """
 from typing import Any
 
-from canvas import ResizingCanvas
-from block_framebase import BlockFrameBase
-from layout import Layout
-from block_framework import BlockFramework
+from .canvas import ResizingCanvas
+from .block_framebase import BlockFrameBase
+from .layout import Layout
+from .block_framework import BlockFramework
 
 
 class BlockService:
