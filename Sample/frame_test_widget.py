@@ -1,6 +1,6 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-# kuri
+# kuri_pome
 """FrameTestWidget
 
 widgetの検証を行う

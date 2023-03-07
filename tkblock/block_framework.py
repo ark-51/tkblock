@@ -1,6 +1,6 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-# kuri
+# kuri_pome
 """BlockFramework"""
 import tkinter as tk
 from tkinter import ttk

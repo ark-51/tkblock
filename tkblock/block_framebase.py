@@ -1,6 +1,6 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-# kuri
+# kuri_pome
 """BlockFrameBase"""
 from typing import Any
 from tkinter import ttk

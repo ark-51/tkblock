@@ -1,6 +1,6 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-# kuri
+# kuri_pome
 """FrameTestTemplate
 
 検証用のFrameを作成するためのテンプレート

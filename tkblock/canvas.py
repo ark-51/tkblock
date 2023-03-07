@@ -1,6 +1,6 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-# kuri
+# kuri_pome
 """ResizingCanvas
 
 自動調整されるキャンバス

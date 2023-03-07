@@ -1,6 +1,6 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-# kuri
+# kuri_pome
 """FrametestReframe
 
 Frame in Frame等のFrameに関する検証を行う

@@ -1,6 +1,6 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-# kuri
+# kuri_pome
 """BlockService
 
 このクラスを使用することでblock指定でwidgetを配置することができる。
