@@ -7,7 +7,7 @@ from tkinter import ttk
 import dataclasses
 from typing import Any
 
-from canvas import ResizingCanvas
+from .canvas import ResizingCanvas
 
 
 PLACE_TAGET_OBJECTS: list[str] = list(
