@@ -14,14 +14,16 @@ Please refer to the examples under Sample.
 Some basic usage is described below.  
 
 ```python
+import tkinter as tk
 from tkinter import ttk
 from tkblock.block_service import BlockService
-root = BlockService.init(10, 20, 500, 1000)
+root = BlockService.init("test", 10, 20, 500, 1000)
 frame = BlockService.create_frame("test")
-label = ttk.Label(self.frame, text="label", anchor=tk.CENTER)
+label = ttk.Label(frame, text="label", anchor=tk.CENTER)
 label.layout = BlockService.layout(5, 6, 10, 12)
 BlockService.place_frame_widget()
 frame.tkraise()
+root.mainloop()
 ```
 
 
