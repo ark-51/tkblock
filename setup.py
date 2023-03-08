@@ -17,7 +17,7 @@ with open("README.md", encoding="utf-8") as f:
     long_description = f.read()
 setup(
     name=package_name,
-    version="0.0.3",
+    version="0.0.4",
     description="tkinter block framework",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -28,7 +28,7 @@ setup(
     packages=[package_name],
     install_requires=_requirements(),
     classifiers=[
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
 )
