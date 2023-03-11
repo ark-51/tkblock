@@ -10,7 +10,7 @@ import logging
 import tkinter as tk
 from tkinter import ttk
 
-from config import ConfigParser
+from ini_parser import IniParser
 from logger import create_logger
 
 sys.path.append(r"../tkblock/")
@@ -24,7 +24,7 @@ DEBUG_MODE: str = "1"
 class FrametestReframe:
     def __init__(self) -> None:
         """初期化を行う"""
-        self.config: ConfigParser = ConfigParser.get_instance()
+        self.config: IniParser = IniParser.get_instance()
         self.frame: BlockFrameBase = None
 
     def get_frame(self) -> BlockFrameBase:

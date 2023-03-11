@@ -1,19 +1,19 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # kuri_pome
-"""ConfigParser
+"""IniParser
 
 シングルトン設計
 初回は下記のようにインスタンス化をする
-config = ConfigParser("c:sample.ini")
+config = IniParser("c:sample.ini")
 それ以外はget_instanceでインスタンスを取得する
-config = ConfigParser.get_instance()
+config = IniParser.get_instance()
 """
 from typing import Any
 import configparser
 
 
-class ConfigParser:
+class IniParser:
     """INIファイルを読み込んで読み込み専用の属性を作成するクラス"""
 
     _instance: Any = None
@@ -59,7 +59,7 @@ class ConfigParser:
         """
         self.config_path: str = config_path
         self.sections: dict = {}
-        self.config_file: ConfigParser = configparser.ConfigParser()
+        self.config_file: IniParser = configparser.ConfigParser()
         # ConfigParser の規定の振る舞いは INIファイルのキーの大文字小文字を区別しないため、
         # 以下の一文を追加し、大文字小文字を区別する。
         self.config_file.optionxform = str
@@ -109,7 +109,7 @@ class ConfigParser:
             del self.sections[section_name][key]
 
 
-def setattr_config(cls, config: ConfigParser, field_name: str, value: Any) -> None:
+def setattr_config(cls, config: IniParser, field_name: str, value: Any) -> None:
     """セッター＋config更新
     Args:
         config (ConfigParser): config object
@@ -124,7 +124,7 @@ def setattr_config(cls, config: ConfigParser, field_name: str, value: Any) -> No
 
 def define_property(
     cls,
-    config: ConfigParser,
+    config: IniParser,
     name: str,
     value: Any,
     readable: bool = True,
@@ -152,10 +152,10 @@ def define_property(
     setattr(cls.__class__, name, property(getter, setter))
 
 
-def undefine_property(cls, config: ConfigParser, name: str) -> None:
+def undefine_property(cls, config: IniParser, name: str) -> None:
     """オブジェクトに属性とプロバティを削除する
     Args:
-        config (ConfigParser): config object
+        config (IniParser): config object
         name (str): 変数名
     """
     # 属性名にcls.__class__は不要
@@ -168,10 +168,10 @@ def undefine_property(cls, config: ConfigParser, name: str) -> None:
         config.config_file.write(write_file)
 
 
-def undefine_property_section(cls, config: ConfigParser, name) -> None:
+def undefine_property_section(cls, config: IniParser, name) -> None:
     """オブジェクトからセクションとプロバティを削除する
     Args:
-        config (ConfigParser): config object
+        config (IniParser): config object
         name (str): 変数名
     """
     # 属性名にcls.__class__は不要

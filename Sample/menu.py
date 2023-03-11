@@ -9,7 +9,7 @@ from tkinter import ttk
 import tkinter.filedialog
 from functools import partial
 
-from config import ConfigParser
+from ini_parser import IniParser
 from logger import create_logger
 
 sys.path.append(r"../tkblock/")
@@ -34,7 +34,7 @@ class Menu:
         Args:
             root (BlockFramework): BlockFramework
         """
-        self.config: ConfigParser = ConfigParser.get_instance()
+        self.config: IniParser = IniParser.get_instance()
         self.root: BlockFramework = root
         self.menu: tk.Menu = None
 
