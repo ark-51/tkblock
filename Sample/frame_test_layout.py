@@ -5,19 +5,17 @@
 
 layoutについての検証を行う
 """
-import sys
 import logging
 import tkinter as tk
 from tkinter import ttk
 
-from ini_parser import IniParser
-from logger import create_logger
-
-sys.path.append(r"../tkblock/")
-from block_service import (
+from tkblock.block_service import (
     BlockFrameBase,
     BlockService,
 )
+
+from ini_parser import Config
+from logger import create_logger
 
 
 logger: logging.Logger = create_logger(__name__, level="debug")
@@ -26,7 +24,7 @@ logger: logging.Logger = create_logger(__name__, level="debug")
 class FrameTestLayout:
     def __init__(self) -> None:
         """初期化を行う"""
-        self.config: IniParser = IniParser.get_instance()
+        self.config: Config = Config.get_instance()
         self.frame: BlockFrameBase = None
 
     def get_frame(self) -> BlockFrameBase:

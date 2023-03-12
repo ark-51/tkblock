@@ -2,20 +2,18 @@
 # -*- coding: utf-8 -*-
 # kuri_pome
 """main"""
-import sys
 import logging
 
-from ini_parser import IniParser
+from tkblock.block_service import BlockService, BlockFramework
+from tkblock.block_util import change_frame
+
+from ini_parser import Config
 from logger import create_logger
 from menu import Menu
 from frame_test_template import FrameTestTemplate
 from frame_test_layout import FrameTestLayout
 from frame_test_reframe import FrametestReframe
 from frame_test_widget import FrameTestWidget
-
-sys.path.append(r"../tkblock/")
-from block_service import BlockService, BlockFramework
-from block_util import change_frame
 
 
 logger: logging.Logger = create_logger(__name__, level="debug")
@@ -35,7 +33,7 @@ class TkMain:
 
     def initialize(self) -> None:
         """初期化を行う"""
-        self.config: IniParser = IniParser.get_instance()
+        self.config: Config = Config.get_instance()
         self.root: BlockFramework = BlockService.init(
             APP_TITLE, SEPELATE_COLUMN_NUMBER, SEPELATE_ROW_NUMBER, WIDTH, HEIGHT
         )

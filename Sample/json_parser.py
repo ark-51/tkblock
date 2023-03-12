@@ -48,7 +48,7 @@ class IniParser:
         """
         self.initialize(config_path)
 
-    def initialize(self, config_path: str, encoding: str = "utf-8") -> None:
+    def initialize(self, config_path: str, encoding: str = "utf-8"):
         """初期化を行う
 
         configparserでconfigを読み取り、その内容をクラスに書き込む。
@@ -116,9 +116,9 @@ def setattr_config(cls, config: IniParser, field_name: str, value: Any) -> None:
         value (Any): セットする値
     """
     setattr(cls, field_name, str(value))
-    config.config_parse[cls.__class__.__name__][field_name[1:]] = str(value)
+    config.config_file[cls.__class__.__name__][field_name[1:]] = str(value)
     with open(config.config_path, "w") as write_file:
-        config.config_parse.write(write_file)
+        config.config_file.write(write_file)
 
 
 def define_property(
@@ -137,9 +137,12 @@ def define_property(
         readable (bool, optional): read許可設定. Defaults to True.
         writable (bool, optional): write許可設定. Defaults to False.
     """
-    field_name: str = f"_{name}"
+    # 属性名にcls.__class__は不要
+    # field_name = "_{}__{}".format(cls.__class__.__name__, name)
+    field_name: str = "_{}".format(name)
     setattr(cls, field_name, value)
     getter: Any | None = (lambda cls: getattr(cls, field_name)) if readable else None
+    # setter = lambda _, value: setattr(cls, field_name, value) if writable else None
     setter: Any | None = (
         lambda _, value: setattr_config(cls, class_object, field_name, value)
         if writable
@@ -154,12 +157,14 @@ def undefine_property(cls, config: IniParser, name: str) -> None:
         config (IniParser): config object
         name (str): 変数名
     """
+    # 属性名にcls.__class__は不要
+    # field_name = "_{}__{}".format(cls.__class__.__name__, name)
     field_name: str = "_{}".format(name)
     delattr(cls, field_name)
     delattr(cls.__class__, name)
-    del config.config_parse[cls.__class__.__name__][field_name[1:]]
+    del config.config_file[cls.__class__.__name__][field_name[1:]]
     with open(config.config_path, "w") as write_file:
-        config.config_parse.write(write_file)
+        config.config_file.write(write_file)
 
 
 def undefine_property_section(cls, config: IniParser, name) -> None:
@@ -171,10 +176,6 @@ def undefine_property_section(cls, config: IniParser, name) -> None:
     field_name: str = "_{}".format(name)
     delattr(cls, field_name)
     delattr(cls.__class__, name)
-    del config.config_parse[field_name[1:]]
+    del config.config_file[field_name[1:]]
     with open(config.config_path, "w") as write_file:
-        config.config_parse.write(write_file)
-
-
-class Config(IniParser):
-    """configファイルを読みだす"""
+        config.config_file.write(write_file)
