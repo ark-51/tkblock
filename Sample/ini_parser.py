@@ -1,13 +1,13 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 # kuri_pome
-"""IniParser
+"""IniParser, Config
 
 シングルトン設計
 初回は下記のようにインスタンス化をする
-config = IniParser("c:sample.ini")
+config = Config("config.ini")
 それ以外はget_instanceでインスタンスを取得する
-config = IniParser.get_instance()
+config = Config.get_instance()
 """
 from typing import Any
 import configparser
@@ -41,27 +41,27 @@ class IniParser:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self, config_path: str) -> None:
+    def __init__(self, file_path: str) -> None:
         """コンストラクタ
         Args:
-            config_path (str): configファイルのパス
+            file_path (str): iniファイルのパス
         """
-        self.initialize(config_path)
+        self.initialize(file_path)
 
-    def initialize(self, config_path: str, encoding: str = "utf-8") -> None:
+    def initialize(self, file_path: str, encoding: str = "utf-8") -> None:
         """初期化を行う
 
         configparserでconfigを読み取り、その内容をクラスに書き込む。
 
         Args:
-            config_path (str): configファイルのパス
+            file_path (str): iniファイルのパス
             encoding (str, optional): configファイルの文字コード. Defaults to 'utf-8'.
         """
-        self.config_path: str = config_path
+        self.file_path: str = file_path
         self.sections: dict = {}
         self.config_parse: IniParser = configparser.ConfigParser()
         self.config_parse.optionxform = str
-        self.config_parse.read(config_path, encoding=encoding)
+        self.config_parse.read(file_path, encoding=encoding)
         for section_name in self.config_parse.sections():
             section: configparser.SectionProxy = self.config_parse[section_name]
             # セクションで同名のキーが存在することがあるので、クラスを作成することで分離する
@@ -74,14 +74,14 @@ class IniParser:
                 self.sections[section_name][key] = value
 
     def write(self, section_name: str, key: str, value: Any) -> None:
-        """configの変数に値を追加し、configファイルに書き込みを行う
+        """iniの変数に値を追加し、iniファイルに書き込みを行う
 
         section_nameのセクションが存在しなければ、作成を行う。
 
         Args:
             section_name (str): 書き込むセクション名
-            key (str): configのkey
-            value (Any): configの値
+            key (str): iniのkey
+            value (Any): iniの値
         """
         if section_name not in dir(self):
             define_property(
@@ -108,17 +108,17 @@ class IniParser:
             del self.sections[section_name][key]
 
 
-def setattr_config(cls, config: IniParser, field_name: str, value: Any) -> None:
-    """セッター＋config更新
+def setattr_ini(cls, ini: Any, field_name: str, value: Any) -> None:
+    """セッター＋ini更新
     Args:
-        config (ConfigParser): config object
+        ini (Any): 属性付与対象の空のクラスオブジェクト
         field_name (str): セットするフィールド名
         value (Any): セットする値
     """
     setattr(cls, field_name, str(value))
-    config.config_parse[cls.__class__.__name__][field_name[1:]] = str(value)
-    with open(config.config_path, "w") as write_file:
-        config.config_parse.write(write_file)
+    ini.config_parse[cls.__class__.__name__][field_name[1:]] = str(value)
+    with open(ini.file_path, "w") as write_file:
+        ini.config_parse.write(write_file)
 
 
 def define_property(
@@ -131,7 +131,7 @@ def define_property(
 ) -> None:
     """オブジェクトに属性とプロバティを追加する
     Args:
-        class_object (object): config object
+        class_object (Any): 属性付与対象の空のクラスオブジェクト
         name (str): 変数名
         value (object): 変数にセットする値
         readable (bool, optional): read許可設定. Defaults to True.
@@ -141,39 +141,39 @@ def define_property(
     setattr(cls, field_name, value)
     getter: Any | None = (lambda cls: getattr(cls, field_name)) if readable else None
     setter: Any | None = (
-        lambda _, value: setattr_config(cls, class_object, field_name, value)
+        lambda _, value: setattr_ini(cls, class_object, field_name, value)
         if writable
         else None
     )
     setattr(cls.__class__, name, property(getter, setter))
 
 
-def undefine_property(cls, config: IniParser, name: str) -> None:
+def undefine_property(cls, ini: Any, name: str) -> None:
     """オブジェクトに属性とプロバティを削除する
     Args:
-        config (IniParser): config object
+        ini (Any): ini object
         name (str): 変数名
     """
     field_name: str = "_{}".format(name)
     delattr(cls, field_name)
     delattr(cls.__class__, name)
-    del config.config_parse[cls.__class__.__name__][field_name[1:]]
-    with open(config.config_path, "w") as write_file:
-        config.config_parse.write(write_file)
+    del ini.config_parse[cls.__class__.__name__][field_name[1:]]
+    with open(ini.file_path, "w") as write_file:
+        ini.config_parse.write(write_file)
 
 
-def undefine_property_section(cls, config: IniParser, name) -> None:
+def undefine_property_section(cls, ini: Any, name) -> None:
     """オブジェクトからセクションとプロバティを削除する
     Args:
-        config (IniParser): config object
+        ini (Any): ini object
         name (str): 変数名
     """
     field_name: str = "_{}".format(name)
     delattr(cls, field_name)
     delattr(cls.__class__, name)
-    del config.config_parse[field_name[1:]]
-    with open(config.config_path, "w") as write_file:
-        config.config_parse.write(write_file)
+    del ini.config_parse[field_name[1:]]
+    with open(ini.file_path, "w") as write_file:
+        ini.config_parse.write(write_file)
 
 
 class Config(IniParser):
