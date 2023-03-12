@@ -1,0 +1,26 @@
+{
+    "name": "test",
+    "staffs": [
+        0,
+        {
+            "name": "staffs_1"
+        },
+        [
+            {
+                "name": "staffs_2_0",
+                "fuga": {
+                    "name": "staffs_2_fuga"
+                }
+            },
+            1,
+            {
+                "name": "staffs_2_2"
+            }
+        ],
+        2
+    ],
+    "test": {
+        "name": "test",
+        "test": {}
+    }
+}
