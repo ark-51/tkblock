@@ -22,5 +22,6 @@
     "test": {
         "name": "test",
         "test": {}
-    }
+    },
+    "hoge": 5
 }
