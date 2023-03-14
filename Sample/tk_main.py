@@ -2,20 +2,19 @@
 # -*- coding: utf-8 -*-
 # kuri_pome
 """main"""
-import sys
 import logging
 
-from config import ConfigParser
+from tkblock.block_service import BlockService, BlockFramework
+from tkblock.block_util import change_frame
+
+from ini_parser import Config
 from logger import create_logger
 from menu import Menu
 from frame_test_template import FrameTestTemplate
 from frame_test_layout import FrameTestLayout
 from frame_test_reframe import FrametestReframe
 from frame_test_widget import FrameTestWidget
-from block_util import change_frame
-
-sys.path.append(r"../tkblock/")
-from block_service import BlockService, BlockFramework
+from frame_test_mode import FrameTestMode
 
 
 logger: logging.Logger = create_logger(__name__, level="debug")
@@ -35,7 +34,7 @@ class TkMain:
 
     def initialize(self) -> None:
         """初期化を行う"""
-        self.config: ConfigParser = ConfigParser.get_instance()
+        self.config: Config = Config.get_instance()
         self.root: BlockFramework = BlockService.init(
             APP_TITLE, SEPELATE_COLUMN_NUMBER, SEPELATE_ROW_NUMBER, WIDTH, HEIGHT
         )
@@ -45,16 +44,19 @@ class TkMain:
         self.frame_test_layout: FrameTestLayout = FrameTestLayout()
         self.frame_test_reframe: FrametestReframe = FrametestReframe()
         self.frame_test_widget: FrameTestWidget = FrameTestWidget()
+        self.frame_test_mode: FrameTestMode = FrameTestMode()
         self.frame_test_template.create()
         self.frame_test_layout.create()
         self.frame_test_reframe.create()
         self.frame_test_widget.create()
+        self.frame_test_mode.create()
         self.menu.create(
             [
                 self.frame_test_template,
                 self.frame_test_layout,
                 self.frame_test_reframe,
                 self.frame_test_widget,
+                self.frame_test_mode,
             ]
         )
         BlockService.place_frame_widget()

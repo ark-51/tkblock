@@ -5,21 +5,19 @@
 
 widgetの検証を行う
 """
-import sys
 import time
 import logging
 import tkinter as tk
 from tkinter import ttk
 import threading
 
-from config import ConfigParser
-from logger import create_logger
-
-sys.path.append(r"../tkblock/")
-from block_service import (
+from tkblock.block_service import (
     BlockFrameBase,
     BlockService,
 )
+
+from ini_parser import Config
+from logger import create_logger
 
 
 logger: logging.Logger = create_logger(__name__, level="debug")
@@ -28,7 +26,7 @@ logger: logging.Logger = create_logger(__name__, level="debug")
 class FrameTestWidget:
     def __init__(self) -> None:
         """初期化を行う"""
-        self.config: ConfigParser = ConfigParser.get_instance()
+        self.config: Config = Config.get_instance()
         self.frame: BlockFrameBase = None
 
     def get_frame(self) -> BlockFrameBase:
@@ -164,3 +162,16 @@ class FrameTestWidget:
         spinbox1_label = tk.Label(self.frame, textvariable=spinbox1_var)
         spinbox1.layout = BlockService.layout(16, 25, 21, 23)
         spinbox1_label.layout = BlockService.layout(16, 25, 23, 25)
+
+        # Sc
+        scrollbar1_listbox_list = tuple([str(x) for x in range(0, 100)])
+        scrollbar1_listbox_var = tk.StringVar(value=scrollbar1_listbox_list)
+        scrollbar1_listbox = tk.Listbox(
+            self.frame, listvariable=scrollbar1_listbox_var, name="scrollbar1_listbox"
+        )
+        scrollbar1_listbox.layout = BlockService.layout(30, 40, 0, 10)
+
+        scrollbar1 = tk.Scrollbar(self.frame, orient=tk.VERTICAL)
+        scrollbar1.layout = BlockService.layout(40, 41, 0, 10)
+        scrollbar1.config(command=scrollbar1_listbox.yview)
+        scrollbar1_listbox.config(yscrollcommand=scrollbar1.set)

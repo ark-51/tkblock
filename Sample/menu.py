@@ -2,19 +2,18 @@
 # -*- coding: utf-8 -*-
 # kuri_pome
 """main"""
-import sys
 import logging
 import tkinter as tk
 from tkinter import ttk
 import tkinter.filedialog
 from functools import partial
 
-from config import ConfigParser
+from tkblock.block_util import change_frame
+from tkblock.block_service import BlockFramework, BlockFrameBase
+
+from ini_parser import Config
 from logger import create_logger
 
-sys.path.append(r"../tkblock/")
-from block_util import change_frame
-from block_service import BlockFramework, BlockFrameBase
 
 logger: logging.Logger = create_logger(__name__, level="debug")
 
@@ -34,7 +33,7 @@ class Menu:
         Args:
             root (BlockFramework): BlockFramework
         """
-        self.config: ConfigParser = ConfigParser.get_instance()
+        self.config: Config = Config.get_instance()
         self.root: BlockFramework = root
         self.menu: tk.Menu = None
 

@@ -10,7 +10,40 @@ from typing import Any
 from .canvas import ResizingCanvas
 
 
-PLACE_TAGET_OBJECTS: list[str] = list(
+PLACE_TARGET_OBJECTS: list[str] = []
+
+
+def create_widget_class_list(
+    now_list: list, class_name: str, base: str = "Widget"
+) -> list:
+    """Widgetを継承しているクラス一覧を取得する
+
+    Args:
+        now_list (list): 現在の取得しているクラス一覧
+        class_name (str): 対象のクラス名
+        base (str, optional): 親クラス名. Defaults to "Widget".
+
+    Returns:
+        list: _description_
+    """
+    for subclass in getattr(class_name, base).__subclasses__():
+        if subclass.__subclasses__() != [] and subclass.__name__ not in now_list:
+            now_list.append(subclass.__name__)
+            now_list: list = create_widget_class_list(
+                now_list, class_name, base=subclass.__name__
+            )
+        else:
+            now_list.append(subclass.__name__)
+    return now_list
+
+
+PLACE_TARGET_OBJECTS += create_widget_class_list([], tk)
+PLACE_TARGET_OBJECTS += create_widget_class_list([], ttk)
+PLACE_TARGET_OBJECTS += ["ResizingCanvas", "BlockFrameBase"]
+PLACE_TARGET_OBJECTS = list(set(PLACE_TARGET_OBJECTS))
+
+
+list(
     set(
         # subclassのsubclassをとりたいため。
         # [cls.__name__ for cls in ttk.Widget.__subclasses__()]
@@ -175,7 +208,7 @@ class BlockFramework(tk.Tk):
             frame (BlockFrameBase): 配置するフレーム
         """
         # objcetが最初に置く対象のクラスなら終了
-        if widget.__class__.__name__ not in PLACE_TAGET_OBJECTS:
+        if widget.__class__.__name__ not in PLACE_TARGET_OBJECTS:
             raise Exception(f"cannot place object error: {widget.__class__.__name__}")
         # layout属性を持っていないなら終了
         # Frameの下に直接配置しているものはここでreturn

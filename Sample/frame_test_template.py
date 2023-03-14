@@ -5,17 +5,15 @@
 
 検証用のFrameを作成するためのテンプレート
 """
-import sys
 import logging
 
-from config import ConfigParser
-from logger import create_logger
-
-sys.path.append(r"../tkblock/")
-from block_service import (
+from tkblock.block_service import (
     BlockFrameBase,
     BlockService,
 )
+
+from ini_parser import Config
+from logger import create_logger
 
 
 logger: logging.Logger = create_logger(__name__, level="debug")
@@ -24,7 +22,7 @@ logger: logging.Logger = create_logger(__name__, level="debug")
 class FrameTestTemplate:
     def __init__(self) -> None:
         """初期化を行う"""
-        self.config: ConfigParser = ConfigParser.get_instance()
+        self.config: Config = Config.get_instance()
         self.frame: BlockFrameBase = None
 
     def get_frame(self) -> BlockFrameBase:
