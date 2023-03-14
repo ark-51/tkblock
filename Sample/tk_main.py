@@ -14,6 +14,7 @@ from frame_test_template import FrameTestTemplate
 from frame_test_layout import FrameTestLayout
 from frame_test_reframe import FrametestReframe
 from frame_test_widget import FrameTestWidget
+from frame_test_mode import FrameTestMode
 
 
 logger: logging.Logger = create_logger(__name__, level="debug")
@@ -43,16 +44,19 @@ class TkMain:
         self.frame_test_layout: FrameTestLayout = FrameTestLayout()
         self.frame_test_reframe: FrametestReframe = FrametestReframe()
         self.frame_test_widget: FrameTestWidget = FrameTestWidget()
+        self.frame_test_mode: FrameTestMode = FrameTestMode()
         self.frame_test_template.create()
         self.frame_test_layout.create()
         self.frame_test_reframe.create()
         self.frame_test_widget.create()
+        self.frame_test_mode.create()
         self.menu.create(
             [
                 self.frame_test_template,
                 self.frame_test_layout,
                 self.frame_test_reframe,
                 self.frame_test_widget,
+                self.frame_test_mode,
             ]
         )
         BlockService.place_frame_widget()
