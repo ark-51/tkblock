@@ -188,6 +188,112 @@ class BlockFramework(tk.Tk):
         values["relheight"]: float = height_object_size / height
         return values
 
+    def _calc_place_rel_with_scroll(
+        self,
+        width: int,
+        height: int,
+        col_size: int,
+        row_size: int,
+        scroll_x_size: int,
+        scroll_y_size: int,
+        col_start: int = 0,
+        col_end: int = 1,
+        row_start: int = 0,
+        row_end: int = 1,
+        pad_left: float = 0,
+        pad_right: float = 0,
+        pad_up: float = 0,
+        pad_down: float = 0,
+    ) -> tuple[float, float, float, float]:
+        """指定された列や行、空白設定から、placeで指定するrelを計算する。
+
+        Args:
+            width (int): フレームの横幅
+            height (int): フレームの縦幅
+            col_size (int): 列サイズ
+            row_size (int): 行サイズ
+            scroll_x_size (int): スクロールのxサイズ
+            scroll_y_size (int): スクロールyサイズ
+            col_start (int, optional): 列の開始位置. Defaults to 0.
+            col_end (int, optional): 列の終了位置. Defaults to 1.
+            row_start (int, optional): 行の開始位置. Defaults to 0.
+            row_end (int, optional): 行の終了位置. Defaults to 1.
+            pad_left (float, optional): 横幅の左側の空白割合. Defaults to 0.
+            pad_right (float, optional): 横幅の右側の空白割合. Defaults to 0.
+            pad_up (float, optional): 縦幅の上側の空白割合. Defaults to 0.
+            pad_down (float, optional): 縦幅の下側の空白割合. Defaults to 0.
+
+        Returns:
+            dict: placeで指定する値
+        """
+        values: dict = {}
+        scrollbar_x_values: dict = {}
+        scrollbar_y_values: dict = {}
+        # relx
+        if scroll_x_size == 0:
+            width_start: float = col_size * col_start
+            width_end: float = col_size * col_end
+            pad_left_size: float = col_size * pad_left
+            pad_right_size: float = col_size * pad_right
+            width_object_start: float = width_start + pad_left_size
+            width_object_end: float = width_end - pad_right_size
+            width_object_size: float = width_object_end - width_object_start
+            values["relx"]: float = width_object_start / width
+            values["relwidth"]: float = width_object_size / width
+            scrollbar_x_values["relx"]: float = width_object_start / width
+            scrollbar_x_values["relwidth"]: float = width_object_size / width
+            scrollbar_y_values["relx"]: float = 0
+            scrollbar_y_values["relwidth"]: float = 0
+        else:
+            width_start: float = col_size * col_start
+            width_end: float = col_size * col_end
+            pad_left_size: float = col_size * pad_left
+            pad_right_size: float = col_size * pad_right
+            width_object_start: float = width_start + pad_left_size
+            width_object_end: float = width_end - pad_right_size - scroll_x_size
+            width_object_size: float = width_object_end - width_object_start
+            width_scroll_object_start: float = width_object_end
+            width_scroll_object_size: float = scroll_x_size
+            values["relx"]: float = width_object_start / width
+            values["relwidth"]: float = width_object_size / width
+            scrollbar_x_values["relx"]: float = width_object_start / width
+            scrollbar_x_values["relwidth"]: float = width_object_size / width
+            scrollbar_y_values["relx"]: float = width_scroll_object_start / width
+            scrollbar_y_values["relwidth"]: float = width_scroll_object_size / width
+
+        # rely
+        if scroll_y_size == 0:
+            height_start: float = row_size * row_start
+            height_end: float = row_size * row_end
+            pad_up_size: float = row_size * pad_up
+            pad_down_size: float = row_size * pad_down
+            height_object_start: float = height_start + pad_up_size
+            height_object_end: float = height_end - pad_down_size
+            height_object_size: float = height_object_end - height_object_start
+            values["rely"]: float = height_object_start / height
+            values["relheight"]: float = height_object_size / height
+            scrollbar_x_values["rely"]: float = 0
+            scrollbar_x_values["relheight"]: float = 0
+            scrollbar_y_values["rely"]: float = height_object_start / height
+            scrollbar_y_values["relheight"]: float = height_object_size / height
+        else:
+            height_start: float = row_size * row_start
+            height_end: float = row_size * row_end
+            pad_up_size: float = row_size * pad_up
+            pad_down_size: float = row_size * pad_down
+            height_object_start: float = height_start + pad_up_size
+            height_object_end: float = height_end - pad_down_size - scroll_y_size
+            height_object_size: float = height_object_end - height_object_start
+            height_scroll_object_start: float = height_object_end
+            height_scroll_object_size: float = scroll_y_size
+            values["rely"]: float = height_object_start / height
+            values["relheight"]: float = height_object_size / height
+            scrollbar_x_values["rely"]: float = height_scroll_object_start / height
+            scrollbar_x_values["relheight"]: float = height_scroll_object_size / height
+            scrollbar_y_values["rely"]: float = height_object_start / height
+            scrollbar_y_values["relheight"]: float = height_object_size / height
+        return values, scrollbar_x_values, scrollbar_y_values
+
     def _place_widget(
         self,
         widget: Any,
@@ -214,15 +320,43 @@ class BlockFramework(tk.Tk):
         # Frameの下に直接配置しているものはここでreturn
         if not ("layout" in dir(widget)):
             return
-        widget.place(
-            self._calc_place_rel(
+        if hasattr(widget, "scrollbar"):
+            x_size: int = 0
+            y_size: int = 0
+            if widget.scrollbar.x is not None:
+                # x軸のスクロールバーがないということは、y軸つまり高さのサイズは調整しない
+                y_size = widget.scrollbar.size
+            if widget.scrollbar.y is not None:
+                # y軸のスクロールバーがないということは、x軸つまり幅のサイズは調整しない
+                x_size = widget.scrollbar.size
+            (
+                widget_values: dict,
+                scrollbar_x_values: dict,
+                scrollbar_y_values: dict,
+            ) = self._calc_place_rel_with_scroll(
                 width,
                 height,
                 col_size,
                 row_size,
+                x_size,
+                y_size,
                 **dataclasses.asdict(widget.layout),
             )
-        )
+            widget.place(widget_values)
+            if widget.scrollbar.x is not None:
+                widget.scrollbar.x.place(scrollbar_x_values)
+            if widget.scrollbar.y is not None:
+                widget.scrollbar.y.place(scrollbar_y_values)
+        else:
+            widget.place(
+                self._calc_place_rel(
+                    width,
+                    height,
+                    col_size,
+                    row_size,
+                    **dataclasses.asdict(widget.layout),
+                )
+            )
 
     def place_frame_widget(self, frame: Any = None) -> None:
         """Frame上のwidgetを全て配置する。

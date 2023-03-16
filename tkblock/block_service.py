@@ -10,6 +10,7 @@ from typing import Any
 from .canvas import ResizingCanvas
 from .block_framebase import BlockFrameBase
 from .layout import Layout
+from .scrollbar import Scrollbar
 from .block_framework import BlockFramework
 
 
@@ -134,6 +135,23 @@ class BlockService:
             pad_up=pad_up,
             pad_down=pad_down,
         )
+
+    @classmethod
+    def scrollbar(cls, x: Any = None, y: Any = None, size: int = None) -> Scrollbar:
+        """Widgetにスクロールバーを紐付ける
+
+        Args:
+            x (Any, optional): 横のスクロールバーのobjcet. Defaults to None.
+            y (Any, optional): 縦のスクロールバーのobjcet. Defaults to None.
+            size (int, optional): スクロールバーのサイズ. Defaults to None.
+
+        Returns:
+            Scrollbar: Scrollbar
+        """
+        if size is None:
+            return Scrollbar(x, y)
+        else:
+            return Scrollbar(x, y, size=size)
 
     @classmethod
     def create_auxiliary_line(cls) -> None:
