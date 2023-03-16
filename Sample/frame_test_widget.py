@@ -163,7 +163,8 @@ class FrameTestWidget:
         spinbox1.layout = BlockService.layout(16, 25, 21, 23)
         spinbox1_label.layout = BlockService.layout(16, 25, 23, 25)
 
-        # Sc
+        # Scrollbar
+        ## how to use 1
         scrollbar1_listbox_list = tuple([str(x) for x in range(0, 100)])
         scrollbar1_listbox_var = tk.StringVar(value=scrollbar1_listbox_list)
         scrollbar1_listbox = tk.Listbox(
@@ -171,7 +172,27 @@ class FrameTestWidget:
         )
         scrollbar1_listbox.layout = BlockService.layout(30, 40, 0, 10)
 
-        scrollbar1 = tk.Scrollbar(self.frame, orient=tk.VERTICAL)
+        scrollbar1: Scrollbar = tk.Scrollbar(self.frame, orient=tk.VERTICAL)
         scrollbar1.layout = BlockService.layout(40, 41, 0, 10)
         scrollbar1.config(command=scrollbar1_listbox.yview)
         scrollbar1_listbox.config(yscrollcommand=scrollbar1.set)
+
+        ## how to use 2
+        scrollbar2_listbox_list = tuple(
+            [str(x) for x in range(0, 100)]
+            + ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]
+        )
+        scrollbar2_listbox_var = tk.StringVar(value=scrollbar2_listbox_list)
+        scrollbar2_listbox = tk.Listbox(
+            self.frame, listvariable=scrollbar2_listbox_var, name="scrollbar2_listbox"
+        )
+        scrollbar2_listbox.layout = BlockService.layout(51, 60, 0, 10)
+        scrollbar2_y_project = tk.Scrollbar(self.frame, orient=tk.VERTICAL)
+        scrollbar2_x_project = tk.Scrollbar(self.frame, orient=tk.HORIZONTAL)
+        scrollbar2_y_project.config(command=scrollbar2_listbox.yview)
+        scrollbar2_x_project.config(command=scrollbar2_listbox.xview)
+        scrollbar2_listbox.config(yscrollcommand=scrollbar2_y_project.set)
+        scrollbar2_listbox.config(xscrollcommand=scrollbar2_x_project.set)
+        scrollbar2_listbox.scrollbar = BlockService.scrollbar(
+            y=scrollbar2_y_project, x=scrollbar2_x_project
+        )
