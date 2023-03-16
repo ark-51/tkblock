@@ -330,9 +330,9 @@ class BlockFramework(tk.Tk):
                 # y軸のスクロールバーがないということは、x軸つまり幅のサイズは調整しない
                 x_size = widget.scrollbar.size
             (
-                widget_values: dict,
-                scrollbar_x_values: dict,
-                scrollbar_y_values: dict,
+                widget_values,
+                scrollbar_x_values,
+                scrollbar_y_values,
             ) = self._calc_place_rel_with_scroll(
                 width,
                 height,
