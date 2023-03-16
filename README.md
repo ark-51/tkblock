@@ -150,7 +150,7 @@ BlockService's in the tkblock library.
 + place_frame_widget  
 You can easily use tkinter Widget just by using.  
 
-<img width="898" alt="readme_layout3" src="https://user-images.githubusercontent.com/78261582/225677201-75f12fa3-1021-4a15-b039-dfb3e4b1fd84.png">
+<img width="897" alt="readme_widget" src="https://user-images.githubusercontent.com/78261582/225685418-ea328480-f051-4617-a459-d7af68ca8d5d.png">
 
 In this figure, several Widget are placed in the above basic usage.  
 Please try to create an application by placing various widgets.  
