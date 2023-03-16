@@ -17,7 +17,7 @@ with open("README.md", encoding="utf-8") as f:
     long_description = f.read()
 setup(
     name=package_name,
-    version="0.0.5",
+    version="1.0.0",
     description="tkinter block framework",
     long_description=long_description,
     long_description_content_type="text/markdown",
