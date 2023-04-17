@@ -94,7 +94,7 @@ class FrametestReframe:
             text="frame_test3_label1",
         )
         frame_test3_label1.layout = BlockService.layout(2, 9, 2, 9)
-        BlockService.root.place_frame_widget(frame=toplevel)
+        BlockService.place_frame_widget(frame=toplevel)
         toplevel.wait_window(toplevel)
         frame_test3.destroy()
         toplevel.destroy()
