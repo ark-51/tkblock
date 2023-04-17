@@ -61,7 +61,9 @@ class BlockFramework(tk.Tk):
         tk (tk.Tk): tk.Tk
     """
 
-    def __init__(self, max_col: int, max_row: int, width: int, height: int) -> None:
+    def __init__(
+        self, max_col: int, max_row: int, width: int, height: int, is_debug=False
+    ) -> None:
         """コンストラクタ
 
         Args:
@@ -69,6 +71,7 @@ class BlockFramework(tk.Tk):
             max_row (int): 分割を行う列数
             width (int): frameの横幅
             height (int): frameの縦幅
+            is_debug (bool, optional): デバッグモードならTrue
         """
 
         super().__init__()
@@ -77,6 +80,7 @@ class BlockFramework(tk.Tk):
         self.width: int = width
         self.height: int = height
         self._name: str = "main"
+        self.is_debug: bool = is_debug
         super().geometry(f"{width}x{height}")
 
     def _override_valiable(
@@ -364,16 +368,15 @@ class BlockFramework(tk.Tk):
                 )
             )
 
-    def place_frame_widget(self, frame: Any = None) -> None:
+    def _place_frame_widget(self, frame) -> None:
         """Frame上のwidgetを全て配置する。
 
         Layout指定をしている全てのwidgetを配置する。
         この関数は、Frame配下に子Frameを考慮して、再起処理で実現している。
 
         Args:
-            frame (Any, optional): 配置する先のFrame. Defaults to None.
+            frame (Any): 配置する先のFrame. Defaults to None.
         """
-        frame: Any = self if frame is None else frame
         width: int
         height: int
         col_size: float
@@ -413,6 +416,20 @@ class BlockFramework(tk.Tk):
             if widget.__class__.__name__ in ("Frame", "BlockFrameBase"):
                 widget.tkraise()
 
+    def place_frame_widget(self, frame: Any = None) -> None:
+        """Frame上のwidgetを全て配置する。
+
+        Layout指定をしている全てのwidgetを配置する。
+        この関数は、Frame配下に子Frameを考慮して、再起処理で実現している。
+
+        Args:
+            frame (Any, optional): 配置する先のFrame. Defaults to None.
+        """
+        frame: Any = self if frame is None else frame
+        self._place_frame_widget(frame=frame)
+        if self.is_debug:
+            self._create_auxiliary_line(frame)
+
     def _write_auxiliary_line(self, frame: Any, widget: ResizingCanvas) -> None:
         """debug用に補助線を引く
 
@@ -438,7 +455,21 @@ class BlockFramework(tk.Tk):
             y: int = int(index * row_size)
             widget.create_line(start_x, y, end_x, y)
 
-    def create_auxiliary_line(self, frame: Any = None) -> None:
+    def _create_auxiliary_line(self, frame: Any) -> None:
+        """補助線を作成する
+
+        この関数は、Frame配下に子Frameを考慮して、再起処理で実現している。
+
+        Args:
+            frame (Any, optional): Canvasを保持しているFrameまたは、その上位のFrame. Defaults to None.
+        """
+        for name, widget in frame.children.items():
+            if widget.__class__.__name__ == "ResizingCanvas":
+                self._write_auxiliary_line(frame, widget)
+            if widget.__class__.__name__ in ("Frame", "BlockFrameBase"):
+                self._create_auxiliary_line(widget)
+
+    def create_auxiliary_line(self, frame: Any = None, is_debug=None) -> None:
         """補助線を作成する
 
         この関数は、Frame配下に子Frameを考慮して、再起処理で実現している。
@@ -451,4 +482,6 @@ class BlockFramework(tk.Tk):
             if widget.__class__.__name__ == "ResizingCanvas":
                 self._write_auxiliary_line(frame, widget)
             if widget.__class__.__name__ in ("Frame", "BlockFrameBase"):
-                self.create_auxiliary_line(widget)
+                is_debug: bool = self.is_debug if is_debug is None else is_debug
+                if is_debug:
+                    self._create_auxiliary_line(widget)

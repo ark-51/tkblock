@@ -78,7 +78,6 @@ The optional arguments are as follows.
 By the way, to make it easier to see the table layout during development, a canvas is created internally to draw auxiliary lines.  
 ```python
 BlockService.place_frame_widget()
-BlockService.create_auxiliary_line()
 ```
 You can draw an auxiliary line by executing the above code.  
 
@@ -139,7 +138,6 @@ frame = BlockService.create_frame("test")
 label = ttk.Label(frame, text="how to use", anchor=tk.CENTER)
 label.layout = BlockService.layout(3, 6, 2, 4)
 BlockService.place_frame_widget()
-BlockService.create_auxiliary_line()
 root.mainloop()
 ```
 
@@ -147,7 +145,6 @@ BlockService's in the tkblock library.
 + init  
 + create_frame  
 + layout  
-+ place_frame_widget  
 You can easily use tkinter Widget just by using.  
 
 <img width="897" alt="readme_widget" src="https://user-images.githubusercontent.com/78261582/225685418-ea328480-f051-4617-a459-d7af68ca8d5d.png">
@@ -226,7 +223,6 @@ frame1.layout = BlockService.layout(1, 9, 1, 9)
 frame2 = BlockService.create_frame("test_frame2", col=3, row=3, root=frame1)
 frame2.layout = BlockService.layout(1, 3, 2, 4)
 BlockService.place_frame_widget()
-BlockService.create_auxiliary_line()
 root.mainloop()
 ```
 
@@ -286,7 +282,6 @@ listbox.config(yscrollcommand=scrollbar_y.set)
 listbox.config(xscrollcommand=scrollbar_x.set)
 listbox.scrollbar = BlockService.scrollbar(y=scrollbar_y, x=scrollbar_x, size=30)
 BlockService.place_frame_widget()
-BlockService.create_auxiliary_line()
 root.mainloop()
 ```
 

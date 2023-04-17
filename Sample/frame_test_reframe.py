@@ -95,8 +95,6 @@ class FrametestReframe:
         )
         frame_test3_label1.layout = BlockService.layout(2, 9, 2, 9)
         BlockService.root.place_frame_widget(frame=toplevel)
-        if self.config.setting.debug == DEBUG_MODE:
-            BlockService.root.create_auxiliary_line(frame=frame_test3)
         toplevel.wait_window(toplevel)
         frame_test3.destroy()
         toplevel.destroy()

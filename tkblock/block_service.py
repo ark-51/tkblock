@@ -21,7 +21,13 @@ class BlockService:
 
     @classmethod
     def init(
-        cls, title: str, max_col: int, max_row: int, width: int, height: int
+        cls,
+        title: str,
+        max_col: int,
+        max_row: int,
+        width: int,
+        height: int,
+        is_debug=False,
     ) -> BlockFramework:
         """コンストラクタ
 
@@ -31,11 +37,14 @@ class BlockService:
             max_row (int): defaultとなる分割する行数
             width (int): フレームの横幅
             height (int): フレームの縦幅
+            is_debug (bool, optional): デバッグモードならTrue
 
         Returns:
             BlockFramework: 大本のrootとなるFrameを継承したクラスのインスタンス
         """
-        cls.root: BlockFramework = BlockFramework(max_col, max_row, width, height)
+        cls.root: BlockFramework = BlockFramework(
+            max_col, max_row, width, height, is_debug=is_debug
+        )
         cls.root.grid_rowconfigure(0, weight=1)
         cls.root.grid_columnconfigure(0, weight=1)
         cls.root.title(title)
@@ -45,6 +54,15 @@ class BlockService:
     def place_frame_widget(cls) -> None:
         """root配下のwidgetを配置する"""
         cls.root.place_frame_widget()
+
+    @classmethod
+    def create_auxiliary_line(cls, is_debug, frame=None) -> None:
+        """debug用に補助線を作成する関数
+
+        補助線を引かない場合はこの関数をcallしないこと
+        """
+        frame = cls.root if frame is None else frame
+        cls.root.create_auxiliary_line(is_debug=is_debug, frame=frame)
 
     @classmethod
     def create_frame(
@@ -152,11 +170,3 @@ class BlockService:
             return Scrollbar(x, y)
         else:
             return Scrollbar(x, y, size=size)
-
-    @classmethod
-    def create_auxiliary_line(cls) -> None:
-        """debug用に補助線を作成する関数
-
-        補助線を引かない場合はこの関数をcallしないこと
-        """
-        cls.root.create_auxiliary_line()
