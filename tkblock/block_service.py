@@ -51,13 +51,14 @@ class BlockService:
         return cls.root
 
     @classmethod
-    def place_frame_widget(cls, frame=None) -> None:
+    def place_frame_widget(cls, frame=None, is_debug=False) -> None:
         """root配下のwidgetを配置する"""
         frame = cls.root if frame is None else frame
         cls.root.place_frame_widget(frame=frame)
+        cls.root.create_auxiliary_line(is_debug=is_debug, frame=frame)
 
     @classmethod
-    def create_auxiliary_line(cls, is_debug, frame=None) -> None:
+    def create_auxiliary_line(cls, is_debug=None, frame=None) -> None:
         """debug用に補助線を作成する関数
 
         補助線を引かない場合はこの関数をcallしないこと
