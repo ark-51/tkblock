@@ -10,6 +10,7 @@ from tkblock.block_util import change_frame
 from ini_parser import Config
 from logger import create_logger
 from menu import Menu
+from frame_test_main import FrameTestMain
 from frame_test_template import FrameTestTemplate
 from frame_test_layout import FrameTestLayout
 from frame_test_reframe import FrametestReframe
@@ -40,11 +41,13 @@ class TkMain:
         )
 
         self.menu: Menu = Menu(self.root)
+        self.frame_test_main: FrameTestMain = FrameTestMain()
         self.frame_test_template: FrameTestTemplate = FrameTestTemplate()
         self.frame_test_layout: FrameTestLayout = FrameTestLayout()
         self.frame_test_reframe: FrametestReframe = FrametestReframe()
         self.frame_test_widget: FrameTestWidget = FrameTestWidget()
         self.frame_test_mode: FrameTestMode = FrameTestMode()
+        self.frame_test_main.create()
         self.frame_test_template.create()
         self.frame_test_layout.create()
         self.frame_test_reframe.create()
@@ -52,6 +55,7 @@ class TkMain:
         self.frame_test_mode.create()
         self.menu.create(
             [
+                self.frame_test_main,
                 self.frame_test_template,
                 self.frame_test_layout,
                 self.frame_test_reframe,
@@ -62,7 +66,7 @@ class TkMain:
         BlockService.place_frame_widget()
         if self.config.setting.debug == DEBUG_MODE:
             BlockService.create_auxiliary_line()
-        change_frame(self.frame_test_template.get_frame())
+        change_frame(self.frame_test_main.get_frame())
 
     def main(self) -> None:
         """main"""

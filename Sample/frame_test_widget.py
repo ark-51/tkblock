@@ -189,10 +189,6 @@ class FrameTestWidget:
         scrollbar2_listbox.layout = BlockService.layout(42, 50, 0, 10)
         scrollbar2_y_project = tk.Scrollbar(self.frame, orient=tk.VERTICAL)
         scrollbar2_x_project = tk.Scrollbar(self.frame, orient=tk.HORIZONTAL)
-        scrollbar2_y_project.config(command=scrollbar2_listbox.yview)
-        scrollbar2_x_project.config(command=scrollbar2_listbox.xview)
-        scrollbar2_listbox.config(yscrollcommand=scrollbar2_y_project.set)
-        scrollbar2_listbox.config(xscrollcommand=scrollbar2_x_project.set)
         scrollbar2_listbox.scrollbar = BlockService.scrollbar(
             y=scrollbar2_y_project, x=scrollbar2_x_project
         )
@@ -208,10 +204,6 @@ class FrameTestWidget:
         scrollbar3_listbox.layout = BlockService.layout(51, 60, 0, 10)
         scrollbar3_y_project = tk.Scrollbar(self.frame, orient=tk.VERTICAL)
         scrollbar3_x_project = tk.Scrollbar(self.frame, orient=tk.HORIZONTAL)
-        scrollbar3_y_project.config(command=scrollbar3_listbox.yview)
-        scrollbar3_x_project.config(command=scrollbar3_listbox.xview)
-        scrollbar3_listbox.config(yscrollcommand=scrollbar3_y_project.set)
-        scrollbar3_listbox.config(xscrollcommand=scrollbar3_x_project.set)
         scrollbar3_listbox.scrollbar = BlockService.scrollbar(
             y=scrollbar3_y_project, x=scrollbar3_x_project, size=30
         )

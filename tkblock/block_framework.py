@@ -320,15 +320,21 @@ class BlockFramework(tk.Tk):
         # Frameの下に直接配置しているものはここでreturn
         if not ("layout" in dir(widget)):
             return
+
         if hasattr(widget, "scrollbar"):
             x_size: int = 0
             y_size: int = 0
             if widget.scrollbar.x is not None:
                 # x軸のスクロールバーがないということは、y軸つまり高さのサイズは調整しない
                 y_size = widget.scrollbar.size
+                widget.scrollbar.x.config(command=widget.xview)
+                widget.config(xscrollcommand=widget.scrollbar.x.set)
             if widget.scrollbar.y is not None:
                 # y軸のスクロールバーがないということは、x軸つまり幅のサイズは調整しない
                 x_size = widget.scrollbar.size
+                widget.scrollbar.y.config(command=widget.yview)
+                widget.config(yscrollcommand=widget.scrollbar.y.set)
+
             (
                 widget_values,
                 scrollbar_x_values,
