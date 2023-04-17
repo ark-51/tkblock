@@ -357,8 +357,7 @@ class ToplevelSplitFile:
         )
         button_execute.layout = BlockService.layout(8, 10, 9, 20)
 
-        BlockService.root.place_frame_widget(frame=toplevel)
-        # BlockService.create_auxiliary_line(frame=self.frame, is_debug=True)
+        BlockService.place_frame_widget(frame=toplevel)
         BlockService.create_auxiliary_line(frame=self.frame)
         toplevel.wait_window(toplevel)
         self.frame.destroy()

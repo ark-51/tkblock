@@ -51,9 +51,10 @@ class BlockService:
         return cls.root
 
     @classmethod
-    def place_frame_widget(cls) -> None:
+    def place_frame_widget(cls, frame=None) -> None:
         """root配下のwidgetを配置する"""
-        cls.root.place_frame_widget()
+        frame = cls.root if frame is None else frame
+        cls.root.place_frame_widget(frame=frame)
 
     @classmethod
     def create_auxiliary_line(cls, is_debug, frame=None) -> None:
