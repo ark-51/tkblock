@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
-# kuri_pome
-"""ToplvelFileSplit"""
+# kyohei.araki
+"""FrameMain"""
 import os
 import logging
 import pathlib
@@ -9,8 +9,9 @@ import functools
 import tkinter as tk
 from tkinter import ttk
 
+import pyperclip
 from tkblock.block_service import BlockService
-from tkblock.block_framebase import BlockFrameBase
+from tkblock.block_framebase import BlockFrame
 
 from ini_parser import Config
 from logger import create_logger
@@ -27,11 +28,11 @@ class ToplevelSplitFile:
     def __init__(self) -> None:
         """初期化を行う"""
         self.config: Config = Config.get_instance()
-        self.frame: BlockFrameBase = None
+        self.frame: BlockFrame = None
         self.select_file_path = pathlib.Path(__file__).resolve().parent
         self.output_folder_path = pathlib.Path(__file__).resolve().parent
 
-    def get_frame(self) -> BlockFrameBase:
+    def get_frame(self) -> BlockFrame:
         return self.frame
 
     def _open_select_file(self, var_entry_select, var_entry_output) -> None:
@@ -229,118 +230,113 @@ class ToplevelSplitFile:
         text_result.see("end")
 
     def create(self, frame) -> None:
-        width = 500
-        height = 500
-        toplevel: tk.Toplevel = tk.Toplevel(frame)
-        toplevel.title("split file")
-        toplevel.geometry(f"{width}x{height}")
-        toplevel.width = width
-        toplevel.hegith = height
-        toplevel.grab_set()  # モーダルにする
-        toplevel.focus_set()  # フォーカスを新しいウィンドウをへ移す
+        toplevel = BlockService.create_toplevel(
+            frame, "split file", 500, 500, is_grab=True
+        )
         # dialog.transient(self.root)  # タスクバーに表示しない
         # ダイアログが閉じられるまで待つ
-        self.frame: BlockFrameBase = BlockService.create_frame(
-            "split_file", col=20, row=20, width=width, height=height, root=toplevel
+        self.frame: BlockFrame = BlockService.create_frame(
+            "split_file", col=20, row=20, root=toplevel
         )
 
         # ファイルとフォルダ選択と文字コード
-        label_select: ttk.Label = ttk.Label(self.frame, text="・分割ファイル")
-        label_select.layout = BlockService.layout(0, 4, 1, 2)
-        label_output: ttk.Label = ttk.Label(self.frame, text="・格納フォルダ")
-        label_output.layout = BlockService.layout(0, 4, 2, 3)
-        label_encoding: ttk.Label = ttk.Label(self.frame, text="・文字コード")
-        label_encoding.layout = BlockService.layout(0, 4, 3, 4)
+        BlockService.create_label(self.frame, 0, 4, 1, 2, text="・分割ファイル")
+        BlockService.create_label(self.frame, 0, 4, 2, 3, text="・格納フォルダ")
+        BlockService.create_label(self.frame, 0, 4, 3, 4, text="・文字コード")
 
-        var_entry_select = tk.StringVar(
-            value=str(pathlib.Path(__file__).resolve().parent)
-        )
-        entry_select: tk.Entry = tk.Entry(self.frame, textvariable=var_entry_select)
-        entry_select.layout = BlockService.layout(6, 20, 1, 2)
-
-        var_entry_output = tk.StringVar(
-            value=str(pathlib.Path(__file__).resolve().parent)
-        )
-        entry_output: tk.Entry = tk.Entry(self.frame, textvariable=var_entry_output)
-        entry_output.layout = BlockService.layout(6, 20, 2, 3)
-
-        var_encoding = tk.StringVar(value="utf-8")
-        entry_encoding: tk.Entry = tk.Entry(self.frame, textvariable=var_encoding)
-        entry_encoding.layout = BlockService.layout(4, 20, 3, 4)
-
-        button_select: tk.Button = tk.Button(
+        _, var_entry_select = BlockService.create_entry(
             self.frame,
+            6,
+            20,
+            1,
+            2,
+            str_value=str(pathlib.Path(__file__).resolve().parent),
+        )
+        _, var_entry_output = BlockService.create_entry(
+            self.frame,
+            6,
+            20,
+            2,
+            3,
+            str_value=str(pathlib.Path(__file__).resolve().parent),
+        )
+        _, var_encoding = BlockService.create_entry(
+            self.frame, 4, 20, 3, 4, str_value="utf-8"
+        )
+        BlockService.create_button(
+            self.frame,
+            4,
+            6,
+            1,
+            2,
             text="開く",
             command=functools.partial(
                 self._open_select_file, var_entry_select, var_entry_output
             ),
         )
-        button_select.layout = BlockService.layout(4, 6, 1, 2)
-        button_output: tk.Button = tk.Button(
+        BlockService.create_button(
             self.frame,
+            4,
+            6,
+            2,
+            3,
             text="開く",
             command=functools.partial(self._open_output_folder, var_entry_output),
         )
-        button_output.layout = BlockService.layout(4, 6, 2, 3)
 
         # 実行モード選択
-        label_select: ttk.Label = ttk.Label(self.frame, text="・分割モード")
-        label_select.layout = BlockService.layout(0, 4, 4, 5)
-        var_radio_mode = tk.IntVar(value=0)
-        radiobutton_mode_row = tk.Radiobutton(
-            self.frame, text="行", value=1, var=var_radio_mode, anchor=tk.W
+        BlockService.create_label(self.frame, 0, 4, 4, 5, text="・分割モード")
+        _, var_radio_mode = BlockService.create_radiobutton(
+            self.frame, 0, 9, 5, 6, text="行", value=1, int_value=0, anchor=tk.W
         )
-        radiobutton_mode_size = tk.Radiobutton(
-            self.frame, text="サイズ", value=2, var=var_radio_mode, anchor=tk.W
+        BlockService.create_radiobutton(
+            self.frame,
+            0,
+            9,
+            5,
+            6,
+            text="サイズ",
+            value=2,
+            var=var_radio_mode,
+            anchor=tk.W,
         )
-        radiobutton_mode_size_row = tk.Radiobutton(
-            self.frame, text="サイズ(行差異許容)", value=3, var=var_radio_mode, anchor=tk.W
+        BlockService.create_radiobutton(
+            self.frame,
+            0,
+            9,
+            7,
+            8,
+            text="サイズ(行差異許容)",
+            value=3,
+            var=var_radio_mode,
+            anchor=tk.W,
         )
-        radiobutton_mode_row.layout = BlockService.layout(0, 9, 5, 6)
-        radiobutton_mode_size.layout = BlockService.layout(0, 9, 6, 7)
-        radiobutton_mode_size_row.layout = BlockService.layout(0, 9, 7, 8)
 
-        label_row: ttk.Label = ttk.Label(self.frame, text="行数")
-        label_row.layout = BlockService.layout(9, 12, 5, 6)
-        label_size: ttk.Label = ttk.Label(self.frame, text="サイズ(KB)")
-        label_size.layout = BlockService.layout(9, 12, 6, 7)
+        BlockService.create_label(self.frame, 9, 12, 5, 6, text="行数")
+        BlockService.create_label(self.frame, 9, 12, 6, 7, text="サイズ(KB)")
 
-        var_row = tk.StringVar(value="10000")
-        entry_row: tk.Entry = tk.Entry(self.frame, textvariable=var_row)
-        entry_row.layout = BlockService.layout(12, 20, 5, 6)
-        var_size = tk.StringVar(value="1")
-        entry_size: tk.Entry = tk.Entry(self.frame, textvariable=var_size)
-        entry_size.layout = BlockService.layout(12, 20, 6, 7)
+        _, var_row = BlockService.create_entry(
+            self.frame, 12, 20, 5, 6, str_value="10000"
+        )
+        _, var_size = BlockService.create_entry(self.frame, 12, 20, 6, 7, str_value="1")
 
         # ヘッダ設定
-        label_head: ttk.Label = ttk.Label(self.frame, text="・ヘッダ設定")
-        label_head.layout = BlockService.layout(0, 4, 8, 9)
-        # # var_check_head = tk.BooleanVar()
-        # # checkbutton_head = tk.Checkbutton(
-        # #     self.frame, text="有効", variable=var_check_head, anchor=tk.W
-        # # )
-        # checkbutton_head.layout = BlockService.layout(0, 8, 9, 10)
-        label_head_num: ttk.Label = ttk.Label(self.frame, text="ヘッダ数")
-        label_head_num.layout = BlockService.layout(0, 4, 9, 10)
-        var_head_num = tk.IntVar()
-        entry_head_num: tk.Entry = tk.Entry(self.frame, textvariable=var_head_num)
-        entry_head_num.layout = BlockService.layout(4, 8, 9, 10)
-        label_head_skip_num: ttk.Label = ttk.Label(self.frame, text="スキップ行")
-        label_head_skip_num.layout = BlockService.layout(0, 4, 10, 11)
-        var_head_skip_num = tk.IntVar()
-        entry_head_skip_num: tk.Entry = tk.Entry(
-            self.frame, textvariable=var_head_skip_num
-        )
-        entry_head_skip_num.layout = BlockService.layout(4, 8, 10, 11)
+        BlockService.create_label(self.frame, 0, 4, 8, 9, text="・ヘッダ設定")
+        BlockService.create_label(self.frame, 0, 4, 9, 10, text="ヘッダ数")
+        _, var_head_num = BlockService.create_entry(self.frame, 4, 8, 9, 10, str_value="0")
+        BlockService.create_label(self.frame, 0, 4, 10, 11, text="スキップ行")
+        _, var_head_skip_num = BlockService.create_entry(self.frame, 4, 8, 10, 11, str_value="0")
 
         # result
-        label_result: ttk.Label = ttk.Label(self.frame, text="分割結果")
-        label_result.layout = BlockService.layout(10, 20, 9, 10)
-        text_result: tk.Text = tk.Text(self.frame)
-        text_result.layout = BlockService.layout(10, 20, 10, 20)
+        BlockService.create_label(self.frame, 10, 20, 9, 10, text="分割結果")
+        text_result = BlockService.create_text(self.frame, 10, 20, 10, 20)
 
-        button_execute: tk.Button = tk.Button(
+        BlockService.create_button(
             self.frame,
+            8,
+            10,
+            9,
+            20,
             text="実行",
             command=functools.partial(
                 self._split_file,
@@ -355,9 +351,8 @@ class ToplevelSplitFile:
                 var_head_skip_num,
             ),
         )
-        button_execute.layout = BlockService.layout(8, 10, 9, 20)
 
-        BlockService.place_frame_widget(frame=toplevel, is_debug=True)
+        BlockService.root.place_frame_widget(frame=toplevel)
         toplevel.wait_window(toplevel)
         self.frame.destroy()
         toplevel.destroy()

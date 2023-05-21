@@ -36,14 +36,8 @@ class TkMain:
     def initialize(self) -> None:
         """初期化を行う"""
         self.config: Config = Config.get_instance()
-        print(bool(int(self.config.setting.debug)))
         self.root: BlockFramework = BlockService.init(
-            APP_TITLE,
-            SEPELATE_COLUMN_NUMBER,
-            SEPELATE_ROW_NUMBER,
-            WIDTH,
-            HEIGHT,
-            is_debug=bool(int(self.config.setting.debug)),
+            APP_TITLE, SEPELATE_COLUMN_NUMBER, SEPELATE_ROW_NUMBER, WIDTH, HEIGHT
         )
 
         self.menu: Menu = Menu(self.root)
@@ -70,6 +64,8 @@ class TkMain:
             ]
         )
         BlockService.place_frame_widget()
+        if self.config.setting.debug == DEBUG_MODE:
+            BlockService.create_auxiliary_line()
         change_frame(self.frame_test_main.get_frame())
 
     def main(self) -> None:

@@ -39,19 +39,40 @@ def create_widget_class_list(
 
 PLACE_TARGET_OBJECTS += create_widget_class_list([], tk)
 PLACE_TARGET_OBJECTS += create_widget_class_list([], ttk)
-PLACE_TARGET_OBJECTS += ["ResizingCanvas", "BlockFrameBase"]
+PLACE_TARGET_OBJECTS += [
+    "ResizingCanvas",
+    "BlockFrame",
+    "BlockToplevel",
+    "BlockCanvas",
+    "BlockLabel",
+    "BlockEntry",
+    "BlockText",
+    "BlockListbox",
+    "BlockCheckbutton",
+    "BlockRadiobutton",
+    "BlockScale",
+    "BlockMessage",
+    "BlockSpinbox",
+    "BlockScrollbar",
+    "BlockButton",
+    "BlockCombobox",
+    "BlockTreeview",
+    "BlockProgressbar",
+    "BlockLabelframe",
+    "BlockNotebook",
+]
 PLACE_TARGET_OBJECTS = list(set(PLACE_TARGET_OBJECTS))
 
 
-list(
-    set(
-        # subclassのsubclassをとりたいため。
-        # [cls.__name__ for cls in ttk.Widget.__subclasses__()]
-        ttk.__all__
-        + [cls.__name__ for cls in tk.Widget.__subclasses__()]
-        + ["ResizingCanvas", "BlockFrameBase"]
-    )
-)
+# list(
+#     set(
+#         # subclassのsubclassをとりたいため。
+#         # [cls.__name__ for cls in ttk.Widget.__subclasses__()]
+#         ttk.__all__
+#         + [cls.__name__ for cls in tk.Widget.__subclasses__()]
+#         + ["ResizingCanvas", "BlockFrame"]
+#     )
+# )
 
 
 class BlockFramework(tk.Tk):
@@ -315,7 +336,7 @@ class BlockFramework(tk.Tk):
             height (int): 配置するフレームの縦幅
             col_size (int): 列サイズ
             row_size (int): 行サイズ
-            frame (BlockFrameBase): 配置するフレーム
+            frame (BlockFrame): 配置するフレーム
         """
         # objcetが最初に置く対象のクラスなら終了
         if widget.__class__.__name__ not in PLACE_TARGET_OBJECTS:
@@ -391,10 +412,10 @@ class BlockFramework(tk.Tk):
         ) = self._acquire_calc_place_info(frame)
         for name, widget in frame.children.items():
             if widget.__class__.__name__ == "Menu":
-                # rootフレームの配下のBlockFrameBaseのみが対象。Menu等は何もしない。
+                # rootフレームの配下のBlockFrameのみが対象。Menu等は何もしない。
                 continue
-            elif widget.__class__.__name__ == "BlockFrameBase":
-                # BlockFrameBaseは作成時に配置するので配置処理は不要。
+            elif widget.__class__.__name__ == "BlockFrame":
+                # BlockFrameは作成時に配置するので配置処理は不要。
                 # widgetを配置するため再起処理のみ実施
                 if hasattr(widget, "layout"):
                     self._place_widget(widget, width, height, col_size, row_size)
@@ -413,7 +434,7 @@ class BlockFramework(tk.Tk):
                 self._place_widget(widget, width, height, col_size, row_size)
         # 最後にFrameを最前面に移動しておく。
         for _, widget in frame.children.items():
-            if widget.__class__.__name__ in ("Frame", "BlockFrameBase"):
+            if widget.__class__.__name__ in ("Frame", "BlockFrame"):
                 widget.tkraise()
 
     def place_frame_widget(self, frame: Any = None) -> None:
@@ -466,7 +487,7 @@ class BlockFramework(tk.Tk):
         for name, widget in frame.children.items():
             if widget.__class__.__name__ == "ResizingCanvas":
                 self._write_auxiliary_line(frame, widget)
-            if widget.__class__.__name__ in ("Frame", "BlockFrameBase"):
+            if widget.__class__.__name__ in ("Frame", "BlockFrame"):
                 self._create_auxiliary_line(widget)
 
     def create_auxiliary_line(self, frame: Any = None, is_debug=None) -> None:
@@ -481,7 +502,7 @@ class BlockFramework(tk.Tk):
         for name, widget in frame.children.items():
             if widget.__class__.__name__ == "ResizingCanvas":
                 self._write_auxiliary_line(frame, widget)
-            if widget.__class__.__name__ in ("Frame", "BlockFrameBase"):
+            if widget.__class__.__name__ in ("Frame", "BlockFrame"):
                 is_debug: bool = self.is_debug if is_debug is None else is_debug
                 if is_debug:
                     self._create_auxiliary_line(widget)

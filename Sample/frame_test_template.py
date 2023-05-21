@@ -8,7 +8,7 @@
 import logging
 
 from tkblock.block_service import (
-    BlockFrameBase,
+    BlockFrame,
     BlockService,
 )
 
@@ -23,9 +23,9 @@ class FrameTestTemplate:
     def __init__(self) -> None:
         """初期化を行う"""
         self.config: Config = Config.get_instance()
-        self.frame: BlockFrameBase = None
+        self.frame: BlockFrame = None
 
-    def get_frame(self) -> BlockFrameBase:
+    def get_frame(self) -> BlockFrame:
         return self.frame
 
     def create(self) -> None:

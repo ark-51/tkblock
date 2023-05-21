@@ -10,14 +10,16 @@ from tkinter import ttk
 
 import pyperclip
 from tkblock.block_service import BlockService
-from tkblock.block_framebase import BlockFrameBase
+from tkblock.block_framebase import BlockFrame
 
 from ini_parser import Config
-from logger import create_logger
+from logger import create_logger, FileKind
 from toplevel_split_file import ToplevelSplitFile
 
 
-logger: logging.Logger = create_logger(__name__, level="debug")
+logger: logging.Logger = create_logger(
+    __name__, level="debug", is_file_handler=True, file_kind=FileKind.ROTATE
+)
 
 
 class FrameTestMain:
@@ -26,35 +28,31 @@ class FrameTestMain:
     def __init__(self) -> None:
         """初期化を行う"""
         self.config: Config = Config.get_instance()
-        self.frame: BlockFrameBase = None
+        self.frame: BlockFrame = None
 
-    def get_frame(self) -> BlockFrameBase:
+    def get_frame(self) -> BlockFrame:
         return self.frame
 
     def _create_font_clear(self, button_layout):
-        def _button_config(event) -> None:
+        def _button_config() -> None:
             pyperclip.copy(pyperclip.paste())
             BlockService.root.iconify()
 
         def key_handler(event):
-            _button_config(event)
+            _button_config()
 
-        button_clickborad_font_clear: ttk.Button = ttk.Button(
-            self.frame, name="", text="クリックボードフォントクリア"
-        )
-        button_clickborad_font_clear.bind("<Button-1>", _button_config)
-        button_clickborad_font_clear.layout = BlockService.layout(*button_layout)
+        _ = self._set_button_command("クリックボードフォントクリア", _button_config, button_layout)
         BlockService.root.bind("<Control-c>", key_handler)
 
     def _create_splited_file(self, button_layout):
         toplevel_split_file = ToplevelSplitFile()
 
-        button_dialog1: tk.Button = tk.Button(
+        BlockService.create_button(
             self.frame,
+            *button_layout,
             text="ファイル分割",
-            command=functools.partial(toplevel_split_file.create, self.frame),
+            command=functools.partial(toplevel_split_file.create, self.frame)
         )
-        button_dialog1.layout = BlockService.layout(*button_layout)
 
     def _create_open_c(self, button_layout):
         def _button_execute() -> None:
@@ -62,14 +60,16 @@ class FrameTestMain:
 
         _ = self._set_button_command("C直下を開く", _button_execute, button_layout)
 
+    def _create_log_test(self, button_layout):
+        def _button_execute() -> None:
+            logger.warning("logのテストです。")
+
+        _ = self._set_button_command("log出力", _button_execute, button_layout)
+
     def _set_button_command(self, text, command, button_layout):
-        button: tk.Button = tk.Button(
-            self.frame,
-            text=text,
-            command=command,
+        return BlockService.create_button(
+            self.frame, *button_layout, text=text, command=command
         )
-        button.layout = BlockService.layout(*button_layout)
-        return button
 
     def _create_button_layouts(self):
         row = self.frame.max_row
@@ -102,6 +102,7 @@ class FrameTestMain:
             self._create_font_clear,
             self._create_splited_file,
             self._create_open_c,
+            self._create_log_test,
         ]
         for index, f in enumerate(functions):
             f(button_layouts[index])

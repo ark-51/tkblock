@@ -97,14 +97,33 @@ This time, we will place the simplest label.
 Suppose we want to place a label here.  
 To do so, we specify the coordinates as follows.  
 ```python
+BlockService.create_label(frame, 3, 6, 2, 4, text="how to use", anchor=tk.CENTER)
+```
+or 
+```python
 label = ttk.Label(frame, text="how to use", anchor=tk.CENTER)
 label.layout = BlockService.layout(3, 6, 2, 4)
 ```
-The above code will create a "Widget" in the middle of the  
-Place a label in a frame with the text "how to use" in the center of the widget.  
-The label Widget has an attribute called layout with coordinates.  
-The layout can be specified as (column start position, column end position, row start position, row end position).  
 
+The above code is the same result as the two codes,  
+It places a label in a frame with the text "how to use" in the center of the widget.  
+The next argument specifies the value of layout.  
+The values of layout are (column start position, column end position, row start position, row end position).  
+
+Except for create_frame, the required arguments for all prepared create_xxx are: layout_frame, column_start_position, column_end_position, row_start_position, and row_end_position.  
+All but a few of the optional arguments are passed as is to tk, ttk.  
+In this case, text="how to use" is given to ttk.label.  
+Please check docstring for what create_xxx series uses.  
+
+The following is a list of functions to create widgets that we have prepared for you.  
+```python
+ 'create_button', 'create_canvas', 'create_checkbutton', 
+'create_combobox', 'create_entry', 'create_frame', 
+'create_label', 'create_labelframe', 'create_listbox', 
+'create_message', 'create_notebook', 'create_progressbar', 
+'create_radiobutton', 'create_scale', 'create_scrollbar', 
+'create_spinbox', 'create_text', 'create_toplevel', 'create_treeview'
+```
 
 This code is then added to the  
 
@@ -133,10 +152,9 @@ from tkinter import ttk
 
 from tkblock.block_service import BlockService
 
-root = BlockService.init("test", 10, 20, 600, 400)
+root = BlockService.init("test", 10, 20, 600, 400, is_debug=True)
 frame = BlockService.create_frame("test")
-label = ttk.Label(frame, text="how to use", anchor=tk.CENTER)
-label.layout = BlockService.layout(3, 6, 2, 4)
+BlockService.create_label(frame, text="how to use", 3, 6, 2, 4, anchor=tk.CENTER)
 BlockService.place_frame_widget()
 root.mainloop()
 ```
@@ -144,7 +162,8 @@ root.mainloop()
 BlockService's in the tkblock library.  
 + init  
 + create_frame  
-+ layout  
++ create_xxx  
++ place_frame_widget
 You can easily use tkinter Widget just by using.  
 
 <img width="897" alt="readme_widget" src="https://user-images.githubusercontent.com/78261582/225685418-ea328480-f051-4617-a459-d7af68ca8d5d.png">
@@ -167,8 +186,7 @@ You can use the margins by setting an optional argument to the layout method for
 ```python
 root = BlockService.init("test_pad", 3, 3, 600, 400)
 frame = BlockService.create_frame("test_pad")
-label = ttk.Label(frame, text="how to use pad", anchor=tk.CENTER, background="red")
-label.layout = BlockService.layout(1, 2, 1, 2, pad_up=0.3, pad_down=0.3)
+BlockService._create_label(frame, text="how to use pad", 1, 2, 1, 2, pad_up=0.3, pad_down=0.3, anchor=tk.CENTER, background="red")
 ```
 
 Executing this code will result in the following.  
@@ -250,8 +268,7 @@ To use it, simply set the scrollbar on the widget you wish to link to the scroll
 
 ```python
 scrollbar_listbox = tk.Listbox(frame)
-scrollbar_y = tk.Scrollbar(frame, orient=tk.VERTICAL)
-scrollbar_listbox.scrollbar = BlockService.scrollbar(y=scrollbar_y)
+scrollbar_listbox.scrollbar = BlockService.scrollbar(frame, y_enable=True)
 ```
 
 In this case, Scrollbar is set to the attribute named scrollbar in the listbox.  
@@ -268,15 +285,11 @@ In the above figure, 30px vertical and horizontal scrollbars are placed.
 The code for this is shown below.
 
 ```python
-root = BlockService.init("test_scrollbar", 5, 5, 600, 400)
+root = BlockService.init("test_scrollbar", 5, 5, 600, 400, is_debug=True)
 frame = BlockService.create_frame("test_scrollbar")
 listbox_list = tuple([str(x) for x in range(0, 100)] + ["aabfsdgadfsgasdfkj;adsfadsj;kjfeijof"])
-listbox_var = tk.StringVar(value=listbox_list)
-listbox = tk.Listbox(frame, listvariable=listbox_var)
-listbox.layout = BlockService.layout(1, 2, 1, 4)
-scrollbar_y = tk.Scrollbar(frame, orient=tk.VERTICAL)
-scrollbar_x = tk.Scrollbar(frame, orient=tk.HORIZONTAL)
-listbox.scrollbar = BlockService.scrollbar(y=scrollbar_y, x=scrollbar_x, size=30)
+_, listbox_var = tk.Listbox(frame, 1, 2, 1, 4, str_value=listbox_list)
+listbox.scrollbar = BlockService.scrollbar(frame, x_enable=True, y_enable=True, size=30)
 BlockService.place_frame_widget()
 root.mainloop()
 ```

@@ -9,7 +9,7 @@ import tkinter.filedialog
 from functools import partial
 
 from tkblock.block_util import change_frame
-from tkblock.block_service import BlockFramework, BlockFrameBase
+from tkblock.block_service import BlockFramework, BlockFrame
 
 from ini_parser import Config
 from logger import create_logger

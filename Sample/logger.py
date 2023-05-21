@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 # kuri_pome
 """logger"""
+from enum import Enum
 import logging
+from logging.handlers import RotatingFileHandler
 
 
 loggers: list = []
@@ -14,6 +16,11 @@ LEVEL: dict[str, int] = {
     "error": logging.ERROR,
     "critical": logging.CRITICAL,
 }
+
+
+class FileKind(Enum):
+    NORMAL = 1
+    ROTATE = 2
 
 
 class LoggerError(Exception):
@@ -34,6 +41,7 @@ def create_logger(
         ]
     ),
     is_file_handler: bool = False,
+    file_kind: FileKind = FileKind.NORMAL,
     file_path: str = "./log.log",
     file_level: str = "debug",
     file_formatter: list[str] = "\t".join(
@@ -41,6 +49,8 @@ def create_logger(
             "%(asctime)s, %(name)s, %(levelname)s, %(filename)s, %(funcName)s, %(lineno)s, %(message)s"
         ]
     ),
+    rotate_max_bytes=1024 * 1024,
+    rotate_file_count=3,
 ) -> logging.Logger:
     """loggerのインスタンスを作成する。
 
@@ -55,6 +65,8 @@ def create_logger(
         file_path (str, optional): 出力先ファイルパス. Defaults to "./log.log".
         file_level (str, optional): ファイル出力ログレベル. Defaults to "debug".
         file_formatter (_type_, optional): ファイル出力ログフォーマット. Defaults to "\t".join( [ "%(asctime)s, %(name)s, %(levelname)s, %(filename)s, %(funcName)s, %(lineno)s, %(message)s" ] ).
+        rotate_max_bytes (int, optional): ローテートするファイルサイズ. Defaults to "1024*1024→1MB".
+        rotate_file_count (int, optional): ローテートするファイル数. Defaults to "3".
 
     Raises:
         LoggerError: ログエラー
@@ -73,7 +85,19 @@ def create_logger(
     if is_stream_handler:
         add_stream_handler(logger, level=stream_level, formatter=stream_formatter)
     if is_file_handler:
-        add_file_handler(logger, file_path, level=file_level, formatter=file_formatter)
+        if file_kind == FileKind.NORMAL:
+            add_file_handler(
+                logger, file_path, level=file_level, formatter=file_formatter
+            )
+        elif file_kind == FileKind.ROTATE:
+            add_rotate_file_handler(
+                logger,
+                file_path,
+                max_bytes=rotate_max_bytes,
+                backup_count=rotate_file_count,
+                level=file_level,
+                formatter=file_formatter,
+            )
     loggers.append({"name": name, "logger": logger})
     return logger
 
@@ -157,7 +181,38 @@ def add_file_handler(
         level (str, optional): 出力logレベル. Defaults to "debug".
         formatter (list[str], optional): 出力フォーマット. Defaults to "\t".join( [ "%(asctime)s, %(name)s, %(levelname)s, %(filename)s, %(funcName)s, %(lineno)s, %(message)s" ] ).
     """
+
     file_handler: logging.FileHandler = logging.FileHandler(file_path)
     file_handler.setLevel(LEVEL[level])
     file_handler.setFormatter(logging.Formatter(formatter))
     logger.addHandler(file_handler)
+
+
+def add_rotate_file_handler(
+    logger: logging.Logger,
+    file_path: str,
+    max_bytes=1024 * 1024,
+    backup_count=3,
+    level: str = "debug",
+    formatter: list[str] = "\t".join(
+        [
+            "%(asctime)s, %(name)s, %(levelname)s, %(filename)s, %(funcName)s, %(lineno)s, %(message)s"
+        ]
+    ),
+) -> None:
+    """ファイルハンドラーを追加する
+
+    Args:
+        logger (logging.Logger): 追加先のlogger
+        file_path (str): 出力ファイルパス
+        max_bytes (int, optional): ローテートするファイルサイズ. Defaults to "1024*1024→1MB".
+        file_count (int, optional): ローテートするファイル数. Defaults to "3".
+        level (str, optional): 出力logレベル. Defaults to "debug".
+        formatter (list[str], optional): 出力フォーマット. Defaults to "\t".join( [ "%(asctime)s, %(name)s, %(levelname)s, %(filename)s, %(funcName)s, %(lineno)s, %(message)s" ] ).
+    """
+    handler = RotatingFileHandler(
+        file_path, maxBytes=max_bytes, backupCount=backup_count
+    )
+    handler.setLevel(LEVEL[level])
+    handler.setFormatter(logging.Formatter(formatter))
+    logger.addHandler(handler)

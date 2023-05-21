@@ -10,7 +10,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from tkblock.block_service import (
-    BlockFrameBase,
+    BlockFrame,
     BlockService,
 )
 
@@ -25,9 +25,9 @@ class FrameTestMode:
     def __init__(self) -> None:
         """初期化を行う"""
         self.config: Config = Config.get_instance()
-        self.frame: BlockFrameBase = None
+        self.frame: BlockFrame = None
 
-    def get_frame(self) -> BlockFrameBase:
+    def get_frame(self) -> BlockFrame:
         return self.frame
 
     def create(self) -> None:
@@ -47,9 +47,9 @@ class TableDelete:
         self.frame = None
         self.config: Config = Config.get_instance()
 
-    def create(self) -> BlockFrameBase:
+    def create(self) -> BlockFrame:
         """作成する"""
-        self.frame: BlockFrameBase = BlockService.create_frame(
+        self.frame: BlockFrame = BlockService.create_frame(
             "table_delete", root=self.parent, col=20, row=20
         )
         self.frame.layout = BlockService.layout(0, 60, 1, 40)
@@ -69,7 +69,7 @@ class TableCp:
         self.parent = parent
         self.frame: None = None
 
-    def create(self) -> BlockFrameBase:
+    def create(self) -> BlockFrame:
         """作成する"""
         self.frame = BlockService.create_frame(
             "table_cp", root=self.parent, col=20, row=20
@@ -85,9 +85,9 @@ class FrameTestMode:
     def __init__(self) -> None:
         """初期化を行う"""
         self.config: Config = Config.get_instance()
-        self.frame: BlockFrameBase = None
+        self.frame: BlockFrame = None
 
-    def get_frame(self) -> BlockFrameBase:
+    def get_frame(self) -> BlockFrame:
         """フレームを返す"""
         return self.frame
 
@@ -106,24 +106,11 @@ class FrameTestMode:
             combobox_mode["value"] = execute_modes[value]
 
         text_list_target: list = list(execute_modes.keys())
-        label_target: ttk.Label = ttk.Label(self.frame, text="target")
-        label_target.layout = BlockService.layout(0, 5, 0, 1)
-        stringvar_target: tk.StringVar = tk.StringVar(value=text_list_target)
-        combobox_target: ttk.Combobox = ttk.Combobox(
-            self.frame, values=text_list_target, textvariable=stringvar_target
-        )
-        combobox_target.layout = BlockService.layout(5, 15, 0, 1)
-        combobox_target.bind("<<ComboboxSelected>>", _set_combobox_mode)
+        BlockService.create_label(self.frame, 0, 5, 0, 1, text="target")
+        _, stringvar_target = BlockService.create_combobox(self.frame, 5, 15, 0, 1, str_value=text_list_target[0], function=_set_combobox_mode)
 
-        text_list_mode: str = ""
-        stringvar_mode: tk.StringVar = tk.StringVar(value=text_list_mode)
-        label_mode: ttk.Label = ttk.Label(self.frame, text="mode")
-        label_mode.layout = BlockService.layout(15, 20, 0, 1)
-        combobox_mode: ttk.Combobox = ttk.Combobox(
-            self.frame, values=[""], textvariable=stringvar_mode
-        )
-        combobox_mode.layout = BlockService.layout(20, 30, 0, 1)
-        combobox_mode.bind("<<ComboboxSelected>>", _raise_frame)
+        BlockService.create_label(self.frame, 15, 20, 0, 1, text="mode")
+        combobox_mode, stringvar_mode = BlockService.create_combobox(self.frame, 20, 30, 0, 1, str_value=text_list_target[0], function=_raise_frame)
 
     def create(self) -> None:
         """実行モードのフレーム作成"""
