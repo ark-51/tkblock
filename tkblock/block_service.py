@@ -484,7 +484,7 @@ class BlockService:
         pad_right=0.0,
         pad_up=0.0,
         pad_down=0.0,
-        int_value=0,
+        bool_value=False,
         **kwargs,
     ):
         """BlockCheckbuttonを作成する
@@ -492,11 +492,31 @@ class BlockService:
         textvariableというオプション引数にtk.IntVarをセットすることも可能。
 
         例
-        def echo_checkbutton():
-            print(checkbutton_var.get())
+        def echo_checkbutton(_):
+            print(checkbutton1_var.get())
+            print(checkbutton2_var.get())
 
-        _, checkbutton_var = BlockService.create_checkbutton(
-            self.frame, 14, 20, 0, 2, name="checkbutton", text="checkbutton", int_value=0, command=echo_checkbutton)
+        _, checkbutton1_var = BlockService.create_checkbutton(
+            self.frame,
+            14,
+            20,
+            0,
+            1,
+            name="checkbutton1",
+            text="checkbutton1",
+            bool_value=True,
+        )
+        _, checkbutton2_var = BlockService.create_checkbutton(
+            self.frame,
+            14,
+            20,
+            1,
+            2,
+            name="checkbutton2",
+            text="checkbutton2",
+            bool_value=False,
+        )
+        BlockService.create_button(self.frame, 14, 20, 2, 3, function=echo_checkbutton)
 
         Args:
             frame (Any): 親フレーム
@@ -508,16 +528,17 @@ class BlockService:
             pad_right (float, optional): 横幅の右側の隙間(0~1). Defaults to 0.0.
             pad_up (float, optional): 立幅の上側の隙間(0~1). Defaults to 0.0.
             pad_down (float, optional): 立幅の下側の隙間(0~1). Defaults to 0.0.
+            bool_value (bool, optional): チェックなし. Defaults to False.
 
         Returns:
             BlockCheckbutton: BlockCheckbutton
-            tk.IntVar: int_var
+            tk.BooleanVar: bool_var
         """
-        if "textvariable" in kwargs:
-            int_var = kwargs["textvariable"]
+        if "variable" in kwargs:
+            bool_var = kwargs["variable"]
         else:
-            int_var = tk.IntVar(value=int_value)
-            kwargs["textvariable"] = int_var
+            bool_var = tk.BooleanVar(value=bool_value)
+            kwargs["variable"] = bool_var
         checkbutton = BlockCheckbutton(frame, *args, **kwargs)
         checkbutton.layout = cls.layout(
             col_start,
@@ -529,7 +550,7 @@ class BlockService:
             pad_up=pad_up,
             pad_down=pad_down,
         )
-        return checkbutton, int_var
+        return checkbutton, bool_var
 
     @classmethod
     def create_radiobutton(
