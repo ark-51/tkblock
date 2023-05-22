@@ -107,10 +107,26 @@ class FrameTestMode:
 
         text_list_target: list = list(execute_modes.keys())
         BlockService.create_label(self.frame, 0, 5, 0, 1, text="target")
-        _, stringvar_target = BlockService.create_combobox(self.frame, 5, 15, 0, 1, str_value=text_list_target[0], function=_set_combobox_mode)
+        _, stringvar_target = BlockService.create_combobox(
+            self.frame,
+            5,
+            15,
+            0,
+            1,
+            init_value=text_list_target[0],
+            function=_set_combobox_mode,
+        )
 
         BlockService.create_label(self.frame, 15, 20, 0, 1, text="mode")
-        combobox_mode, stringvar_mode = BlockService.create_combobox(self.frame, 20, 30, 0, 1, str_value=text_list_target[0], function=_raise_frame)
+        combobox_mode, stringvar_mode = BlockService.create_combobox(
+            self.frame,
+            20,
+            30,
+            0,
+            1,
+            init_value=text_list_target[0],
+            function=_raise_frame,
+        )
 
     def create(self) -> None:
         """実行モードのフレーム作成"""

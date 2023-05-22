@@ -63,7 +63,7 @@ class FrameTestWidget:
             5,
             3,
             10,
-            str_value=("tkinter", "os", "datetime", "math"),
+            init_value=("tkinter", "os", "datetime", "math"),
             name="listbox1",
         )
         listbox1.insert(2, "hogehoge")
@@ -80,7 +80,7 @@ class FrameTestWidget:
             1,
             name="checkbutton1",
             text="checkbutton1",
-            bool_value=True,
+            init_value=True,
         )
         _, checkbutton2_var = BlockService.create_checkbutton(
             self.frame,
@@ -90,7 +90,7 @@ class FrameTestWidget:
             2,
             name="checkbutton2",
             text="checkbutton2",
-            bool_value=False,
+            init_value=False,
         )
         BlockService.create_button(self.frame, 14, 20, 2, 3, function=echo_checkbutton)
         # Radiobutton--------------------------------------------------
@@ -100,7 +100,7 @@ class FrameTestWidget:
             15,
             5,
             7,
-            int_value=0,
+            init_value=0,
             name="radiobutton1_1",
             text="radiobutton1_1",
             value=10,
@@ -127,7 +127,7 @@ class FrameTestWidget:
         )
         # Scale--------------------------------------------------
         _, scale1_var = BlockService.create_scale(
-            self.frame, 16, 20, 5, 10, str_value="", name="scale1"
+            self.frame, 16, 20, 5, 10, init_value="", name="scale1"
         )
         BlockService.create_label(
             self.frame, 16, 20, 3, 5, name="scale1_label", textvariable=scale1_var
@@ -207,7 +207,7 @@ class FrameTestWidget:
         labelframe1_entry.pack()
         # Spinbox--------------------------------------------------
         _, spinbox1_var = BlockService.create_spinbox(
-            self.frame, 16, 25, 21, 23, int_value=0, from_=-10, to=10, increment=1
+            self.frame, 16, 25, 21, 23, init_value=0, from_=-10, to=10, increment=1
         )
         _ = BlockService.create_label(
             self.frame, 16, 25, 23, 25, textvariable=spinbox1_var
@@ -220,7 +220,7 @@ class FrameTestWidget:
             40,
             0,
             10,
-            str_value=tuple([str(x) for x in range(0, 100)]),
+            init_value=tuple([str(x) for x in range(0, 100)]),
             name="scrollbar1_listbox",
         )
         layout = BlockService.layout(40, 41, 0, 10)
@@ -234,7 +234,7 @@ class FrameTestWidget:
             [str(x) for x in range(0, 100)] + ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]
         )
         scrollbar2_listbox, _ = BlockService.create_listbox(
-            self.frame, 42, 49, 0, 10, str_value=sc2_temp, name="scrollbar2_listbox"
+            self.frame, 42, 49, 0, 10, init_value=sc2_temp, name="scrollbar2_listbox"
         )
         scrollbar2_listbox.scrollbar = BlockService.scrollbar(
             self.frame, x_enable=True, y_enable=True, size=15

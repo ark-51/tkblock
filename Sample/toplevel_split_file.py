@@ -250,7 +250,7 @@ class ToplevelSplitFile:
             20,
             1,
             2,
-            str_value=str(pathlib.Path(__file__).resolve().parent),
+            init_value=str(pathlib.Path(__file__).resolve().parent),
         )
         _, var_entry_output = BlockService.create_entry(
             self.frame,
@@ -258,10 +258,10 @@ class ToplevelSplitFile:
             20,
             2,
             3,
-            str_value=str(pathlib.Path(__file__).resolve().parent),
+            init_value=str(pathlib.Path(__file__).resolve().parent),
         )
         _, var_encoding = BlockService.create_entry(
-            self.frame, 4, 20, 3, 4, str_value="utf-8"
+            self.frame, 4, 20, 3, 4, init_value="utf-8"
         )
         BlockService.create_button(
             self.frame,
@@ -287,7 +287,7 @@ class ToplevelSplitFile:
         # 実行モード選択
         BlockService.create_label(self.frame, 0, 4, 4, 5, text="・分割モード")
         _, var_radio_mode = BlockService.create_radiobutton(
-            self.frame, 0, 9, 5, 6, text="行", value=1, int_value=0, anchor=tk.W
+            self.frame, 0, 9, 5, 6, text="行", value=1, init_value=0, anchor=tk.W
         )
         BlockService.create_radiobutton(
             self.frame,
@@ -316,16 +316,22 @@ class ToplevelSplitFile:
         BlockService.create_label(self.frame, 9, 12, 6, 7, text="サイズ(KB)")
 
         _, var_row = BlockService.create_entry(
-            self.frame, 12, 20, 5, 6, str_value="10000"
+            self.frame, 12, 20, 5, 6, init_value="10000"
         )
-        _, var_size = BlockService.create_entry(self.frame, 12, 20, 6, 7, str_value="1")
+        _, var_size = BlockService.create_entry(
+            self.frame, 12, 20, 6, 7, init_value="1"
+        )
 
         # ヘッダ設定
         BlockService.create_label(self.frame, 0, 4, 8, 9, text="・ヘッダ設定")
         BlockService.create_label(self.frame, 0, 4, 9, 10, text="ヘッダ数")
-        _, var_head_num = BlockService.create_entry(self.frame, 4, 8, 9, 10, str_value="0")
+        _, var_head_num = BlockService.create_entry(
+            self.frame, 4, 8, 9, 10, init_value="0"
+        )
         BlockService.create_label(self.frame, 0, 4, 10, 11, text="スキップ行")
-        _, var_head_skip_num = BlockService.create_entry(self.frame, 4, 8, 10, 11, str_value="0")
+        _, var_head_skip_num = BlockService.create_entry(
+            self.frame, 4, 8, 10, 11, init_value="0"
+        )
 
         # result
         BlockService.create_label(self.frame, 10, 20, 9, 10, text="分割結果")

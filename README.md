@@ -288,7 +288,7 @@ The code for this is shown below.
 root = BlockService.init("test_scrollbar", 5, 5, 600, 400, is_debug=True)
 frame = BlockService.create_frame("test_scrollbar")
 listbox_list = tuple([str(x) for x in range(0, 100)] + ["aabfsdgadfsgasdfkj;adsfadsj;kjfeijof"])
-_, listbox_var = tk.Listbox(frame, 1, 2, 1, 4, str_value=listbox_list)
+_, listbox_var = tk.Listbox(frame, 1, 2, 1, 4, init_value=listbox_list)
 listbox.scrollbar = BlockService.scrollbar(frame, x_enable=True, y_enable=True, size=30)
 BlockService.place_frame_widget()
 root.mainloop()

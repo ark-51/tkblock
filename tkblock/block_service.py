@@ -319,7 +319,7 @@ class BlockService:
         pad_right=0.0,
         pad_up=0.0,
         pad_down=0.0,
-        str_value="",
+        init_value="",
         **kwargs,
     ):
         """BlockEntryを作成する
@@ -340,7 +340,7 @@ class BlockService:
             pad_right (float, optional): 横幅の右側の隙間(0~1). Defaults to 0.0.
             pad_up (float, optional): 立幅の上側の隙間(0~1). Defaults to 0.0.
             pad_down (float, optional): 立幅の下側の隙間(0~1). Defaults to 0.0.
-            str_value (str, optional): 初期値. Defaults to "".
+            init_value (str, optional): 初期値. Defaults to "".
 
         Returns:
             BlockEntry: BlockEntry
@@ -349,7 +349,7 @@ class BlockService:
         if "textvariable" in kwargs:
             string_var = kwargs["textvariable"]
         else:
-            string_var = tk.StringVar(value=str_value)
+            string_var = tk.StringVar(value=init_value)
             kwargs["textvariable"] = string_var
         entry = BlockEntry(frame, *args, **kwargs)
         entry.layout = cls.layout(
@@ -429,7 +429,7 @@ class BlockService:
         pad_right=0.0,
         pad_up=0.0,
         pad_down=0.0,
-        str_value="",
+        init_value="",
         **kwargs,
     ):
         """BlockListboxを作成する
@@ -437,7 +437,7 @@ class BlockService:
         listvariableというオプション引数にtk.StringVarをセットすることも可能。
 
         例
-        listbox, _ = BlockService.create_listbox(self.frame, 0, 5, 3, 10, str_value=("tkinter", "os", "datetime", "math"), name="listbox")
+        listbox, _ = BlockService.create_listbox(self.frame, 0, 5, 3, 10, init_value=("tkinter", "os", "datetime", "math"), name="listbox")
         listbox.insert(2, "hogehoge")
 
         Args:
@@ -450,7 +450,7 @@ class BlockService:
             pad_right (float, optional): 横幅の右側の隙間(0~1). Defaults to 0.0.
             pad_up (float, optional): 立幅の上側の隙間(0~1). Defaults to 0.0.
             pad_down (float, optional): 立幅の下側の隙間(0~1). Defaults to 0.0.
-            str_value (str, optional): 初期値. Defaults to "".
+            init_value (str, optional): 初期値. Defaults to "".
 
         Returns:
             BlockListbox: BlockListbox
@@ -459,7 +459,7 @@ class BlockService:
         if "listvariable" in kwargs:
             string_var = kwargs["listvariable"]
         else:
-            string_var = tk.StringVar(value=str_value)
+            string_var = tk.StringVar(value=init_value)
             kwargs["listvariable"] = string_var
         listbox = BlockListbox(frame, *args, **kwargs)
         listbox.layout = cls.layout(
@@ -488,7 +488,7 @@ class BlockService:
         pad_right=0.0,
         pad_up=0.0,
         pad_down=0.0,
-        bool_value=False,
+        init_value=False,
         **kwargs,
     ):
         """BlockCheckbuttonを作成する
@@ -508,7 +508,7 @@ class BlockService:
             1,
             name="checkbutton1",
             text="checkbutton1",
-            bool_value=True,
+            init_value=True,
         )
         _, checkbutton2_var = BlockService.create_checkbutton(
             self.frame,
@@ -518,7 +518,7 @@ class BlockService:
             2,
             name="checkbutton2",
             text="checkbutton2",
-            bool_value=False,
+            init_value=False,
         )
         BlockService.create_button(self.frame, 14, 20, 2, 3, function=echo_checkbutton)
 
@@ -532,7 +532,7 @@ class BlockService:
             pad_right (float, optional): 横幅の右側の隙間(0~1). Defaults to 0.0.
             pad_up (float, optional): 立幅の上側の隙間(0~1). Defaults to 0.0.
             pad_down (float, optional): 立幅の下側の隙間(0~1). Defaults to 0.0.
-            bool_value (bool, optional): チェックなし. Defaults to False.
+            init_value (bool, optional): チェックなし. Defaults to False.
 
         Returns:
             BlockCheckbutton: BlockCheckbutton
@@ -541,7 +541,7 @@ class BlockService:
         if "variable" in kwargs:
             bool_var = kwargs["variable"]
         else:
-            bool_var = tk.BooleanVar(value=bool_value)
+            bool_var = tk.BooleanVar(value=init_value)
             kwargs["variable"] = bool_var
         checkbutton = BlockCheckbutton(frame, *args, **kwargs)
         checkbutton.layout = cls.layout(
@@ -569,7 +569,7 @@ class BlockService:
         pad_right=0.0,
         pad_up=0.0,
         pad_down=0.0,
-        int_value=0,
+        init_value=0,
         **kwargs,
     ):
         """BlockRadiobuttonを作成する
@@ -577,7 +577,7 @@ class BlockService:
         textvariableというオプション引数にtk.IntVarをセットすることも可能。
 
         例
-        _, radiobutton_var = BlockService.create_radiobutton(self.frame, 6, 15, 5, 7, int_value=0, name="radiobutton1_1", text="radiobutton1_1", value=10)
+        _, radiobutton_var = BlockService.create_radiobutton(self.frame, 6, 15, 5, 7, init_value=0, name="radiobutton1_1", text="radiobutton1_1", value=10)
         _, _ = BlockService.create_radiobutton(self.frame, 6, 15, 7, 10, name="radiobutton1_2", text="radiobutton1_2", value=20, variable=radiobutton_var)
         BlockService.create_label(self.frame, 6, 15, 3, 5, name="radiobutton1_label", textvariable=radiobutton_var)
 
@@ -599,7 +599,7 @@ class BlockService:
         if "variable" in kwargs:
             int_var = kwargs["variable"]
         else:
-            int_var = tk.IntVar(value=int_value)
+            int_var = tk.IntVar(value=init_value)
             kwargs["variable"] = int_var
         radiobutton = BlockRadiobutton(frame, *args, **kwargs)
         radiobutton.layout = cls.layout(
@@ -627,7 +627,7 @@ class BlockService:
         pad_right=0.0,
         pad_up=0.0,
         pad_down=0.0,
-        str_value="",
+        init_value="",
         **kwargs,
     ):
         """BlockScaleを作成する
@@ -635,7 +635,7 @@ class BlockService:
         varというオプション引数にtk.StringVarをセットすることも可能。
 
         例
-        _, scale_var = BlockService.create_scale(self.frame, 16, 20, 5, 10, str_value="", name="scale1")
+        _, scale_var = BlockService.create_scale(self.frame, 16, 20, 5, 10, init_value="", name="scale1")
         BlockService.create_label(self.frame, 16, 20, 3, 5, name="scale_label", textvariable=scale_var)
 
         Args:
@@ -648,7 +648,7 @@ class BlockService:
             pad_right (float, optional): 横幅の右側の隙間(0~1). Defaults to 0.0.
             pad_up (float, optional): 立幅の上側の隙間(0~1). Defaults to 0.0.
             pad_down (float, optional): 立幅の下側の隙間(0~1). Defaults to 0.0.
-            str_value (str, optional): 初期値. Defaults to "".
+            init_value (str, optional): 初期値. Defaults to "".
 
         Returns:
             BlockScale: BlockScale
@@ -657,7 +657,7 @@ class BlockService:
         if "var" in kwargs:
             string_var = kwargs["var"]
         else:
-            string_var = tk.StringVar(value=str_value)
+            string_var = tk.StringVar(value=init_value)
             kwargs["var"] = string_var
         scale = BlockScale(frame, *args, **kwargs)
         scale.layout = cls.layout(
@@ -732,7 +732,7 @@ class BlockService:
         pad_right=0.0,
         pad_up=0.0,
         pad_down=0.0,
-        int_value=0,
+        init_value=0,
         **kwargs,
     ):
         """BlockSpinboxを作成する
@@ -740,7 +740,7 @@ class BlockService:
         textvariableというオプション引数にtk.IntVarをセットすることも可能。
 
         例
-        _, spinbox1_var = BlockService.create_spinbox(self.frame, 16, 25, 21, 23, int_value=0, from_=-10, to=10, increment=1)
+        _, spinbox1_var = BlockService.create_spinbox(self.frame, 16, 25, 21, 23, init_value=0, from_=-10, to=10, increment=1)
         _ = BlockService.create_label(self.frame, 16, 25, 23, 25, textvariable=spinbox1_var)
 
         Args:
@@ -761,7 +761,7 @@ class BlockService:
         if "textvariable" in kwargs:
             int_var = kwargs["textvariable"]
         else:
-            int_var = tk.IntVar(value=int_value)
+            int_var = tk.IntVar(value=init_value)
             kwargs["textvariable"] = int_var
         spinbox = BlockSpinbox(frame, *args, **kwargs)
         spinbox.layout = cls.layout(
@@ -783,7 +783,7 @@ class BlockService:
         BlockService.scrollbarの戻り地をwidget.scrollbarに指定することで自動で作成されるので、そちらを推奨
 
         例
-        scrollbar1_listbox, _ = BlockService.create_listbox(self.frame, 30, 40, 0, 10, str_value=tuple([str(x) for x in range(0, 100)]), name="scrollbar1_listbox")
+        scrollbar1_listbox, _ = BlockService.create_listbox(self.frame, 30, 40, 0, 10, init_value=tuple([str(x) for x in range(0, 100)]), name="scrollbar1_listbox")
         layout = BlockService.layout(40, 41, 0, 10)
         scrollbar1 = BlockService.create_scrollbar(self.frame, layout=layout, orient=tk.VERTICAL)
         scrollbar1.config(command=scrollbar1_listbox.yview)
@@ -875,7 +875,7 @@ class BlockService:
         pad_right=0.0,
         pad_up=0.0,
         pad_down=0.0,
-        str_value="",
+        init_value="",
         function=None,
         **kwargs,
     ):
@@ -896,7 +896,7 @@ class BlockService:
             pad_right (float, optional): 横幅の右側の隙間(0~1). Defaults to 0.0.
             pad_up (float, optional): 立幅の上側の隙間(0~1). Defaults to 0.0.
             pad_down (float, optional): 立幅の下側の隙間(0~1). Defaults to 0.0.
-            str_value (str, optional): 初期値. Defaults to "".
+            init_value (str, optional): 初期値. Defaults to "".
             function (None, function): 押下のbindする関数. Defaults to None.
 
         Returns:
@@ -906,7 +906,7 @@ class BlockService:
         if "textvariable" in kwargs:
             string_var = kwargs["textvariable"]
         else:
-            string_var = tk.StringVar(value=str_value)
+            string_var = tk.StringVar(value=init_value)
             kwargs["textvariable"] = string_var
         combobox = BlockCombobox(frame, *args, **kwargs)
         combobox.layout = cls.layout(
