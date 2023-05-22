@@ -385,7 +385,12 @@ class BlockService:
         def echo_text(_):
             print(text1.get("1.0", "end - 1c"))
 
-        text1 = BlockService.create_text(self.frame, 30, 40, 15, 20, name="text1")
+        text1 = BlockService.create_text(
+            self.frame, 30, 40, 15, 20, name="text1", wrap="none"
+        )
+        text1.scrollbar = BlockService.scrollbar(
+            self.frame, x_enable=True, y_enable=True
+        )
         text1.insert(tk.END, "hoge\nfuga")
         BlockService.create_button(self.frame, 30, 40, 20, 21, function=echo_text)
 
