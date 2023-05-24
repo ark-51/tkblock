@@ -300,6 +300,21 @@ If you wish to manually place it anywhere you wish, simply specify the layout as
 ## How to use the Menu bar
 Omitted since it is the same as the usage of tkinter. 
 
+## bonus. wait_processe.
+The "BlockService.wait_processe" function is used to draw the waiting screen during processing.  
+An example is used in topleve_split_file.py under Sample.  
+This is a decorator function to decorate the currently executing function.  
+For example, when a function assigned to a button widget is executed, it will output a waiting dialog.   
+
+<img width="218" alt="wait_process1" src="https://github.com/kuri-pome/tkblock/assets/78261582/03c4680c-4de0-4047-89f6-75cc732ec2f9">
+
+To use it, simply set the target frame as an argument and decorate it.  
+```python
+@wait_processe(BlockService.root)
+def _split_file(
+```
+
+
 # Summary.  
 If you are going to make a full-fledged app, I would prefer not to use this.  
 I think a small app would be useful.  
