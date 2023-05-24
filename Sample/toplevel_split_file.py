@@ -10,7 +10,7 @@ import tkinter as tk
 from tkinter import ttk
 
 import pyperclip
-from tkblock.block_service import BlockService
+from tkblock.block_service import BlockService, wait_processe
 from tkblock.block_framebase import BlockFrame
 
 from ini_parser import Config
@@ -167,6 +167,7 @@ class ToplevelSplitFile:
             out_file.close()
         return split_index
 
+    @wait_processe(BlockService.root)
     def _split_file(
         self,
         text_result,
@@ -293,11 +294,11 @@ class ToplevelSplitFile:
             self.frame,
             0,
             9,
-            5,
             6,
+            7,
             text="サイズ",
             value=2,
-            var=var_radio_mode,
+            variable=var_radio_mode,
             anchor=tk.W,
         )
         BlockService.create_radiobutton(
@@ -308,7 +309,7 @@ class ToplevelSplitFile:
             8,
             text="サイズ(行差異許容)",
             value=3,
-            var=var_radio_mode,
+            variable=var_radio_mode,
             anchor=tk.W,
         )
 

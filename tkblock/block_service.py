@@ -5,13 +5,76 @@
 
 このクラスを使用することでblock指定でwidgetを配置することができる。
 """
+import time
+import threading
 from typing import Any
+from functools import wraps, partial
 
 from .canvas import ResizingCanvas
 from .block_framebase import *
 from .layout import Layout
 from .scrollbar import Scrollbar
 from .block_framework import BlockFramework
+
+
+def wait_processe(frame):
+    """処理の完了を待つ。その間、待機描画処理を行う。
+
+    Arguments:
+        args (tuple): 位置引数
+        kwargs (dict): キーワード引数 (名前で指定する引数)
+    """
+
+    def _create_wait_toplevel(frame, is_exit):
+        toplevel = BlockService.create_toplevel(
+            frame, "wait", 300, 300, is_focus=True, is_grab=True
+        )
+        frame: BlockFrame = BlockService.create_frame(
+            "wait_toplevel",
+            col=10,
+            row=10,
+            root=toplevel,
+        )
+        label = BlockService.create_label(frame, 1, 9, 1, 9, text="")
+        BlockService.place_frame_widget(frame=toplevel)
+        toplevel.update_idletasks()
+        # toplevel.wait_window(toplevel)
+
+        while True:
+            if is_exit[0]:
+                break
+            label.config(text="実行中です。(ぐるぐる描画にしたい。)")
+            time.sleep(0.5)
+            label.config(text="少々お待ちを。(ぐるぐる描画にしたい。)")
+            time.sleep(0.5)
+            toplevel.update_idletasks()
+
+        toplevel.destroy()
+
+    def wrapper(func):
+        @wraps(func)
+        def wait_processe(*args, **kwargs):
+            is_exit = [False]
+            result = [None]
+
+            def _execute(result, func, *args, **kwargs):
+                result[0] = func(*args, **kwargs)
+                is_exit[0] = True
+
+            wait_thread = threading.Thread(
+                target=partial(_create_wait_toplevel, frame, is_exit)
+            )
+            main_thread = threading.Thread(
+                target=partial(_execute, result, func, *args, **kwargs)
+            )
+            wait_thread.start()
+            time.sleep(0.5)
+            main_thread.start()
+            return result[0]
+
+        return wait_processe
+
+    return wrapper
 
 
 class BlockService:
@@ -207,7 +270,6 @@ class BlockService:
         if is_grab:
             toplevel.grab_set()  # モーダルにする
         # dialog.transient(self.root)  # タスクバーに表示しない
-        # ダイアログが閉じられるまで待つ
 
         return toplevel
 
