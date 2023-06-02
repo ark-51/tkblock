@@ -70,4 +70,6 @@ class TkMain:
 
     def main(self) -> None:
         """main"""
+        logger.info("start main loop")
         self.root.mainloop()
+        logger.info("end main loop")

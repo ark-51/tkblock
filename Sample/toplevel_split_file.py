@@ -167,7 +167,7 @@ class ToplevelSplitFile:
             out_file.close()
         return split_index
 
-    @wait_processe(BlockService.root)
+    @wait_processe()
     def _split_file(
         self,
         text_result,

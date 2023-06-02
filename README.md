@@ -310,7 +310,7 @@ For example, when a function assigned to a button widget is executed, it will ou
 
 To use it, simply set the target frame as an argument and decorate it.  
 ```python
-@wait_processe(BlockService.root)
+@wait_processe()
 def _split_file(
 ```
 

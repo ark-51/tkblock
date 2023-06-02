@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # kuri_pome
 """FrameMain"""
+import time
 import logging
 import functools
 import subprocess
@@ -9,7 +10,7 @@ import tkinter as tk
 from tkinter import ttk
 
 import pyperclip
-from tkblock.block_service import BlockService
+from tkblock.block_service import BlockService, wait_processe
 from tkblock.block_framebase import BlockFrame
 
 from ini_parser import Config
@@ -57,6 +58,7 @@ class FrameTestMain:
     def _create_open_c(self, button_layout):
         def _button_execute() -> None:
             subprocess.Popen(["explorer", "C:\\"], shell=True)
+            BlockService.root.iconify()
 
         _ = self._set_button_command("C直下を開く", _button_execute, button_layout)
 
@@ -65,6 +67,17 @@ class FrameTestMain:
             logger.warning("logのテストです。")
 
         _ = self._set_button_command("log出力", _button_execute, button_layout)
+
+    def _create_sleep10_test(self, button_layout):
+        @wait_processe()
+        def _button_execute() -> None:
+            logger.warning("sleep start")
+            for index in range(10):
+                logger.warning(index)
+                time.sleep(1)
+            logger.warning("sleep end")
+
+        _ = self._set_button_command("sleep10", _button_execute, button_layout)
 
     def _set_button_command(self, text, command, button_layout):
         return BlockService.create_button(
@@ -103,6 +116,7 @@ class FrameTestMain:
             self._create_splited_file,
             self._create_open_c,
             self._create_log_test,
+            self._create_sleep10_test,
         ]
         for index, f in enumerate(functions):
             f(button_layouts[index])

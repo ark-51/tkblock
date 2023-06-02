@@ -11,10 +11,7 @@ import tkinter as tk
 from tkinter import ttk
 import threading
 
-from tkblock.block_service import (
-    BlockFrame,
-    BlockService,
-)
+from tkblock.block_service import BlockFrame, BlockService, wait_processe
 
 from ini_parser import Config
 from logger import create_logger
@@ -256,3 +253,20 @@ class FrameTestWidget:
         # canvas--------------------------------------------------
         cavas1 = BlockService.create_canvas(self.frame, 42, 49, 15, 20)
         cavas1.create_line(0, 0, 430, 300)
+
+        # wait_processe--------------------------------------------------
+        @wait_processe()
+        def wait_text_f(_):
+            time.sleep(3)
+            text_wait.insert(tk.END, text_wait.get("1.0", "end - 1c"))
+
+        text_wait = BlockService.create_text(
+            self.frame, 0, 10, 26, 31, name="text_wait", wrap="none"
+        )
+        text_wait.scrollbar = BlockService.scrollbar(
+            self.frame, x_enable=True, y_enable=True
+        )
+        text_wait.insert(tk.END, "waite\nprocess\n")
+        BlockService.create_button(
+            self.frame, 0, 10, 31, 32, function=wait_text_f, text="sleep3からの+"
+        )
