@@ -79,6 +79,12 @@ class FrameTestMain:
 
         _ = self._set_button_command("sleep10", _button_execute, button_layout)
 
+    def _create_raise_exception(self, button_layout):
+        def _button_execute() -> None:
+            raise Exception("例外送出テスト")
+
+        _ = self._set_button_command("例外送出テスト", _button_execute, button_layout)
+
     def _set_button_command(self, text, command, button_layout):
         return BlockService.create_button(
             self.frame, *button_layout, text=text, command=command
@@ -117,6 +123,7 @@ class FrameTestMain:
             self._create_open_c,
             self._create_log_test,
             self._create_sleep10_test,
+            self._create_raise_exception,
         ]
         for index, f in enumerate(functions):
             f(button_layouts[index])

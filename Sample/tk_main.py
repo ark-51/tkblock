@@ -3,12 +3,14 @@
 # kuri_pome
 """main"""
 import logging
+import tkinter as tk
 
 from tkblock.block_service import BlockService, BlockFramework
 from tkblock.block_util import change_frame
 
 from ini_parser import Config
 from logger import create_logger
+from tk_traceback import TracebackCatch
 from menu import Menu
 from frame_test_main import FrameTestMain
 from frame_test_template import FrameTestTemplate
@@ -19,6 +21,8 @@ from frame_test_mode import FrameTestMode
 
 
 logger: logging.Logger = create_logger(__name__, level="debug")
+
+tk.CallWrapper = TracebackCatch
 
 WIDTH: int = 1200
 HEIGHT: int = 800
