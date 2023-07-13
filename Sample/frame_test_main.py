@@ -14,7 +14,7 @@ from tkblock.block_service import BlockService, wait_processe
 from tkblock.block_framebase import BlockFrame
 
 from ini_parser import Config
-from logger import create_logger, FileKind
+from tkblock.logger import create_logger, FileKind
 from toplevel_split_file import ToplevelSplitFile
 
 

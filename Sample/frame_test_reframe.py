@@ -12,7 +12,7 @@ from tkinter import ttk
 from tkblock.block_service import BlockFrame, BlockService
 
 from ini_parser import Config
-from logger import create_logger
+from tkblock.logger import create_logger
 
 
 logger: logging.Logger = create_logger(__name__, level="debug")
@@ -44,7 +44,15 @@ class FrametestReframe:
         frame_test2_frame_test1.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 
         # BlockFrame → Frame → BlockFrame → Label
-        BlockService.create_label(frame_test2_frame_test1, 2, 3, 5, 6, name="frame_test2_frame_test1_label1", text="FB→F→FB")
+        BlockService.create_label(
+            frame_test2_frame_test1,
+            2,
+            3,
+            5,
+            6,
+            name="frame_test2_frame_test1_label1",
+            text="FB→F→FB",
+        )
 
     def _create_test1_frame(self) -> None:
         """root上のBlockFrameの上にBlockFrameの上にFrameを配置する例"""
@@ -71,11 +79,21 @@ class FrametestReframe:
 
     def _create_dialog(self) -> None:
         # dialog設定
-        toplevel = BlockService.create_toplevel(self.frame, "toplevel_BlockFrame", 500, 500, is_focus=True, is_grab=True)
+        toplevel = BlockService.create_toplevel(
+            self.frame, "toplevel_BlockFrame", 500, 500, is_focus=True, is_grab=True
+        )
         frame_test3: BlockFrame = BlockService.create_frame(
             "test3", col=10, row=10, width=500, height=500, root=toplevel
         )
-        BlockService.create_label(frame_test3, 2, 9, 2, 9, name="frame_test3_label1", text="frame_test3_label1")
+        BlockService.create_label(
+            frame_test3,
+            2,
+            9,
+            2,
+            9,
+            name="frame_test3_label1",
+            text="frame_test3_label1",
+        )
         BlockService.root.place_frame_widget(frame=toplevel)
         if self.config.setting.debug == DEBUG_MODE:
             BlockService.root.create_auxiliary_line(frame=frame_test3)
@@ -88,4 +106,12 @@ class FrametestReframe:
         self._create_test1_frame()
         self._create_test2_frame()
 
-        BlockService.create_button(self.frame, 4, 6, 0, 1, text="toplevel BlockFrame", command=self._create_dialog)
+        BlockService.create_button(
+            self.frame,
+            4,
+            6,
+            0,
+            1,
+            text="toplevel BlockFrame",
+            command=self._create_dialog,
+        )

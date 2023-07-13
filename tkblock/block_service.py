@@ -12,6 +12,7 @@ from functools import wraps, partial
 from .canvas import ResizingCanvas
 from .block_framebase import *
 from .layout import Layout
+from .traceback import TracebackCatch
 from .scrollbar import Scrollbar
 from .block_framework import BlockFramework
 from .block_waiting_screen import BlockWaitingScreen
@@ -32,18 +33,22 @@ def wait_processe(frame=None):
             result = [None]
             is_force_finish = [False]
             wait_screen = BlockWaitingScreen(root, is_force_finish)
-            
+
             def _execute(result, wait_screen, func, *args, **kwargs):
                 result[0] = func(*args, **kwargs)
                 wait_screen.end_thread()
 
             # # スレッドを実行して、関数を実行
-            wait_thread = threading.Thread(target=wait_screen.start_thread)
-            # wait_thread.daemon = False
+            wait_thread = threading.Thread(
+                name="wait_thread", target=wait_screen.start_thread
+            )
             wait_thread.start()
-            # run_thread = threading.Thread(target=partial(_execute, result, wait_screen, func, args=args, kwargs=kwargs), args=args, kwargs=kwargs)
-            run_thread = threading.Thread(target=partial(_execute, result, wait_screen, func), args=args, kwargs=kwargs)
-            # run_thread.daemon = True
+            run_thread = threading.Thread(
+                name="run_thread",
+                target=partial(_execute, result, wait_screen, func),
+                args=args,
+                kwargs=kwargs,
+            )
             run_thread.start()
             return result[0]
 
@@ -66,6 +71,8 @@ class BlockService:
         width: int,
         height: int,
         is_debug=False,
+        is_output_file_error=True,
+        error_output_destination=None,
     ) -> BlockFramework:
         """コンストラクタ
 
@@ -76,10 +83,16 @@ class BlockService:
             width (int): フレームの横幅
             height (int): フレームの縦幅
             is_debug (bool, optional): デバッグモードならTrue
+            is_output_file_error (bool, optional): エラーをファイル出力するか
+            error_output_destination (str, optional): エラーの出力先パス
 
         Returns:
             BlockFramework: 大本のrootとなるFrameを継承したクラスのインスタンス
         """
+        if is_output_file_error:
+            tk.CallWrapper = TracebackCatch
+            if error_output_destination is not None:
+                TracebackCatch.init_logger(file_path=error_output_destination)
         cls.root: BlockFramework = BlockFramework(
             max_col, max_row, width, height, is_debug=is_debug
         )
@@ -260,6 +273,7 @@ class BlockService:
         pad_right=0.0,
         pad_up=0.0,
         pad_down=0.0,
+        is_resize=True,
         **kwargs,
     ):
         """BlockCanvasを作成する
@@ -282,7 +296,10 @@ class BlockService:
         Returns:
             BlockCanvas: BlockCanvas
         """
-        canvas = BlockCanvas(frame, *args, **kwargs)
+        if is_resize:
+            canvas = ResizingCanvas(frame, *args, **kwargs)
+        else:
+            canvas = BlockCanvas(frame, *args, **kwargs)
         canvas.layout = cls.layout(
             col_start,
             col_end,

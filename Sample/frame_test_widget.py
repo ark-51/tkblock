@@ -14,7 +14,7 @@ import threading
 from tkblock.block_service import BlockFrame, BlockService, wait_processe
 
 from ini_parser import Config
-from logger import create_logger
+from tkblock.logger import create_logger
 
 
 logger: logging.Logger = create_logger(__name__, level="debug")

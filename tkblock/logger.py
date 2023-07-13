@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # kuri_pome
 """logger"""
+import os
 from enum import Enum
 import logging
 from logging.handlers import RotatingFileHandler
@@ -33,16 +34,16 @@ def create_logger(
     name: str,
     propagate: bool = False,
     level: str = "debug",
-    is_stream_handler: bool = True,
+    is_stream_handler: bool = False,
     stream_level: str = "debug",
     stream_formatter: list[str] = "\t".join(
         [
-            "%(asctime)s, %(name)s, %(levelname)s, %(filename)s, %(funcName)s, %(lineno)s, %(message)s"
+            "%(asctime)s, %(levelname)s, %(filename)s, %(funcName)s, %(lineno)s, %(message)s"
         ]
     ),
-    is_file_handler: bool = False,
-    file_kind: FileKind = FileKind.NORMAL,
-    file_path: str = "./log.log",
+    is_file_handler: bool = True,
+    file_kind: FileKind = FileKind.ROTATE,
+    file_path: str = f"{os.getcwd()}/log.log",
     file_level: str = "debug",
     file_formatter: list[str] = "\t".join(
         [

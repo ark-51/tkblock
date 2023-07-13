@@ -8,6 +8,13 @@
 import tkinter as tk
 
 
+class BlockCanvas(tk.Canvas):
+    """tk.Canvas"""
+
+    def __init__(self, frame, *args, **kwargs):
+        super().__init__(frame, *args, **kwargs)
+
+
 class ResizingCanvas(tk.Canvas):
     """ユーザーがフレームサイズを変更した場合、自動調整されるキャンバス
 
@@ -18,15 +25,15 @@ class ResizingCanvas(tk.Canvas):
         tk (tk.Canvas): キャンバス
     """
 
-    def __init__(self, parent: tk.Frame, **kwargs) -> None:
+    def __init__(self, frame, *args, **kwargs) -> None:
         """コンストラクタ
 
         Args:
-            parent (tk.Frame): キャンバスを乗せる親フレーム
+            frame (tk.Frame): キャンバスを乗せる親フレーム
         """
-        super().__init__(parent, **kwargs)
-        self.width: int = parent.width
-        self.height: int = parent.height
+        super().__init__(frame, *args, **kwargs)
+        self.width: int = frame.width
+        self.height: int = frame.height
         self.bind("<Configure>", self.on_resize)
 
     def on_resize(self, event: tk.Event) -> None:
