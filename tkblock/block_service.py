@@ -91,7 +91,9 @@ class BlockService:
         """
         if is_output_file_error:
             tk.CallWrapper = TracebackCatch
-            if error_output_destination is not None:
+            if error_output_destination is None:
+                TracebackCatch.init_logger()
+            else:
                 TracebackCatch.init_logger(file_path=error_output_destination)
         cls.root: BlockFramework = BlockFramework(
             max_col, max_row, width, height, is_debug=is_debug
