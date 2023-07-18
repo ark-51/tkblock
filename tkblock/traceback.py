@@ -4,6 +4,7 @@
 """TracebackCatch"""
 import os
 import traceback
+import threading
 
 from .logger import create_logger, FileKind
 
@@ -32,6 +33,7 @@ class TracebackCatch:
                 "----------------------------------------------"
             )
             TracebackCatch.logger.error(traceback.format_exc())
+            TracebackCatch.logger.error(f"threading.enumerate: {threading.enumerate()}")
             self.widget._report_exception()
 
     def init_logger(file_path=f"{os.getcwd()}/error.log", rotate_max_bytes=1024 * 1024):

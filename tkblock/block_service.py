@@ -6,6 +6,7 @@
 このクラスを使用することでblock指定でwidgetを配置することができる。
 """
 import threading
+import traceback
 from typing import Any
 from functools import wraps, partial
 
@@ -13,6 +14,7 @@ from .canvas import ResizingCanvas
 from .block_framebase import *
 from .layout import Layout
 from .traceback import TracebackCatch
+from .thread_stop import StoppableThread
 from .scrollbar import Scrollbar
 from .block_framework import BlockFramework
 from .block_waiting_screen import BlockWaitingScreen
@@ -35,21 +37,33 @@ def wait_processe(frame=None):
             wait_screen = BlockWaitingScreen(root, is_force_finish)
 
             def _execute(result, wait_screen, func, *args, **kwargs):
-                result[0] = func(*args, **kwargs)
-                wait_screen.end_thread()
+                try:
+                    result[0] = func(*args, **kwargs)
+                    wait_screen.end_thread()
+                except:
+                    # run_threadが何かしらのエラーが発生したとき
+                    for t in threading.enumerate():
+                        if t.name == "wait_thread":
+                            # TracebackCatchのloggerはエラーログファイル出力をするので、そちらに出力
+                            TracebackCatch.logger.error(traceback.format_exc())
+                            # 待機画面を終了させるためのフラグ更新
+                            wait_screen.is_spin = False
 
-            # # スレッドを実行して、関数を実行
+            # 待機画面のスレッド
             wait_thread = threading.Thread(
                 name="wait_thread", target=wait_screen.start_thread
             )
             wait_thread.start()
-            run_thread = threading.Thread(
+            # mainとなる処理を実行するスレッド
+            run_thread = StoppableThread(
                 name="run_thread",
                 target=partial(_execute, result, wait_screen, func),
                 args=args,
                 kwargs=kwargs,
             )
             run_thread.start()
+            # mainスレッドはそのままtkinterのloopさせる。
+            # waitスレッドが終了後にダイアログが終了し、mainスレッドがイベント受付開始をし、resultの値をアクセスする
             return result[0]
 
         return wait_processe
