@@ -25,9 +25,6 @@ class StoppableThread(threading.Thread):
 
     def raise_exception(self):
         thread_id = self.get_id()
-        print("")
-        print(f"raise: {thread_id}")
-
         resu = ctypes.pythonapi.PyThreadState_SetAsyncExc(
             ctypes.c_long(thread_id), ctypes.py_object(SystemExit)
         )

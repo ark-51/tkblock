@@ -23,6 +23,7 @@ class BlockWaitingScreen:
         self.top = tk.Toplevel(master)
         self.top.title("Wait Screen")
         self.top.geometry("{}x{}".format(width, height))
+        self.top.grab_set()
 
         # このWindowsが閉じられたとき
         def click_close():
